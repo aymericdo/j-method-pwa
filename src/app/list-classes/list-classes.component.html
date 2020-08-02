@@ -1,0 +1,11 @@
+<mat-selection-list #courses>
+  <ng-container *ngIf="list.length; else empty">
+    <mat-list-option *ngFor="let course of list">
+      {{course.name}}
+    </mat-list-option>
+  </ng-container>
+  <ng-template #empty>
+    <img class="illustration" src="assets/no-data.svg" />
+    <h3>Pas encore de cours enregisté</h3>
+  </ng-template>
+</mat-selection-list>
