@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,6 +25,7 @@
     "@types/gapi": "0.0.39",
     "@types/gapi.auth2": "0.0.52",
     "@types/gapi.client.calendar": "^3.0.5",
+    "express": "^4.17.1",
     "moment": "^2.27.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
