@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ListClassesComponent implements OnInit {
   list = [];
+  selected = [];
 
   constructor(
     public dialog: MatDialog,
@@ -20,6 +21,22 @@ export class ListClassesComponent implements OnInit {
 
   openDialog(): void {
     this.dialog.open(ConfirmationSignoutDialogComponent);
+  }
+
+  onSelection(event, courses): void {
+    this.selected = courses.selectedOptions.selected;
+  }
+
+  removeCourses(): void {
+    const courses = JSON.parse(localStorage.getItem('courses'));
+    const newList = courses.filter((c) => !this.selected.map(s => s.value.name).includes(c.name));
+    this.selected = [];
+    this.list = newList;
+    localStorage.setItem('courses', JSON.stringify(newList));
+  }
+
+  trackByMethod(index: number, el): string {
+    return el.name;
   }
 }
 

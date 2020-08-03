@@ -21,4 +21,11 @@
     left: 1em;
     bottom: 1em;
   }
+
+  .fab-btn-trash {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1em;
+  }
 }
