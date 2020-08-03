@@ -1,11 +1,24 @@
-<mat-selection-list #courses>
-  <ng-container *ngIf="list.length; else empty">
+<ng-container *ngIf="list.length; else empty">
+  <mat-selection-list #courses>
     <mat-list-option *ngFor="let course of list">
       {{course.name}}
     </mat-list-option>
-  </ng-container>
-  <ng-template #empty>
-    <img class="illustration" src="assets/no-data.svg" />
-    <h3>Pas encore de cours enregisté</h3>
-  </ng-template>
-</mat-selection-list>
+  </mat-selection-list>
+</ng-container>
+<ng-template #empty>
+  <img class="illustration" src="assets/no-data.svg" />
+  <h3>Pas encore de cours enregisté</h3>
+</ng-template>
+<button
+  mat-mini-fab class="fab-btn-signout"
+  aria-label="Sign out button"
+  (click)="openDialog()">
+  <mat-icon>flight_takeoff</mat-icon>
+</button>
+<button
+  mat-fab color="primary" class="fab-btn-add-classes"
+  aria-label="Add courses button"
+  routerLink="/add-classes"
+>
+  <mat-icon>add</mat-icon>
+</button>

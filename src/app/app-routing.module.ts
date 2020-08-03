@@ -5,7 +5,7 @@ import { ListClassesComponent } from './list-classes/list-classes.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: ListClassesComponent,
   },
   {

@@ -4,6 +4,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: black; }
 
-pre {
+span.test {
   color: white;
+}
+
+#googleBtn {
+  position: absolute;
+  top: 3em;
+  left: 50%;
+  transform: translateX(-50%);
 }

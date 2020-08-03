@@ -2,11 +2,12 @@
   <div class="section-row">
     <mat-form-field class="example-full-width">
       <mat-label>Nouveau cours</mat-label>
-      <input matInput placeholder="Ex. Anglais" name="courses" [(ngModel)]="name">
+      <input matInput placeholder="Ex. Anglais" name="courses" [(ngModel)]="name" [disabled]="submitting">
     </mat-form-field>
   </div>
   <div class="section-row">
     <mat-button-toggle-group
+      [disabled]="submitting"
       name="fontStyle" aria-label="Font Style"
       [value]="difficulties" #group="matButtonToggleGroup"
       (change)="difficulties = group.value">
@@ -15,6 +16,12 @@
     </mat-button-toggle-group>
   </div>
   <div class="section-row">
-    <button [disabled]="!name" mat-stroked-button color="primary" value="Enregistrer">Enregistrer</button>
+    <button [disabled]="!name || submitting" mat-stroked-button color="primary" value="Enregistrer">Enregistrer</button>
   </div>
 </form>
+<div *ngIf="submitting" class="progress-spinner">
+  <mat-progress-spinner
+    color="primary"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
