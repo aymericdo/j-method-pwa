@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -10,13 +11,23 @@ import { Router } from '@angular/router';
 export class ListClassesComponent implements OnInit {
   list = [];
   selected = [];
+  signIn = false;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.list = JSON.parse(localStorage.getItem('courses')) || [];
+
+    this.document.addEventListener('signedin', () => {
+      this.signIn = true;
+    });
+
+    this.document.addEventListener('signout', () => {
+      this.signIn = false;
+    });
   }
 
   openDialog(): void {
