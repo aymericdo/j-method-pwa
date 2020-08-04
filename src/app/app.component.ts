@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    document.getElementById('googleBtn').style.display = 'none';
     this.document.addEventListener('signedin', () => {
       if (this.router.url === '/') {
         this.router.navigateByUrl('home');
