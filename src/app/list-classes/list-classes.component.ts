@@ -29,6 +29,23 @@ export class ListClassesComponent implements OnInit {
 
   removeCourses(): void {
     const courses = JSON.parse(localStorage.getItem('courses'));
+
+    const batch = gapi.client.newBatch();
+
+    this.selected.map(s => s.value.ids).forEach((ids) => {
+      ids.forEach((id: string) => {
+        batch.add(gapi.client.calendar.events.delete({
+          calendarId: 'primary',
+          eventId: id,
+        }));
+      });
+    });
+
+    batch.then((event) => {
+      console.log('all events now dynamically delete!!!');
+      console.log(event);
+    });
+
     const newList = courses.filter((c) => !this.selected.map(s => s.value.name).includes(c.name));
     this.selected = [];
     this.list = newList;

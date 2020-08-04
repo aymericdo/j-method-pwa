@@ -2,8 +2,6 @@ import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 
-declare var gapi: any;
-
 @Component({
   selector: 'app-add-classes',
   templateUrl: './add-classes.component.html',
@@ -22,7 +20,6 @@ export class AddClassesComponent {
   saveCourses(): void {
     this.submitting = true;
     const courses = JSON.parse(localStorage.getItem('courses')) || [];
-    courses.push({ name: this.name, difficulties: this.difficulties, date: moment().format('YYYY/MM/DD') });
 
     const reminders: string[] = [];
     reminders.push(moment().add(1, 'day').format('YYYY-MM-DD'));
@@ -53,17 +50,19 @@ export class AddClassesComponent {
     }));
 
     const batch = gapi.client.newBatch();
-    events.map((r, j) => {
+    events.forEach((e) => {
       batch.add(gapi.client.calendar.events.insert({
         calendarId: 'primary',
-        resource: events[j],
+        resource: e,
       }));
     });
 
     batch.then((event) => {
-      localStorage.setItem('courses', JSON.stringify(courses));
-      console.log('all jobs now dynamically done!!!');
+      console.log('all events now dynamically added!!!');
       console.log(event);
+      const ids = Object.keys(event.result).map(k => event.result[k].result.id);
+      courses.push({ name: this.name, difficulties: this.difficulties, date: moment().format('YYYY/MM/DD'), ids });
+      localStorage.setItem('courses', JSON.stringify(courses));
       this.submitting = false;
       this.zone.run(() => this.router.navigate(['/home']));
     });
