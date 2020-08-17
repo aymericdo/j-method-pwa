@@ -4,9 +4,12 @@
 
   .section-row {
     padding: 0.875em;
+    display: flex;
+    justify-content: flex-end;
   }
 
-  input {
+  input,
+  textarea {
     color: white;
   }
 
@@ -15,5 +18,14 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  mat-form-field.full-width {
+    width: 100%;
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: none;
   }
 }

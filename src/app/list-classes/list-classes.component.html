@@ -1,6 +1,40 @@
+<p>
+  <mat-toolbar>
+    <button *ngIf="selected.length"
+      mat-icon-button aria-label="icon-button with keyboard_arrow_left icon"
+      (click)='unselectAll()'>
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <span [innerHTML]="selected.length ? selected.length : 'La méthode des J'"></span>
+
+    <span class="spacer"></span>
+
+    <button *ngIf="selected.length"
+      mat-icon-button aria-label="Remove courses button"
+      (click)="removeCourses()">
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <button *ngIf="selected.length"
+      mat-icon-button aria-label="Schedule courses button"
+      (click)="openDialog('scheduler')">
+      <mat-icon>alarm_add</mat-icon>
+    </button>
+
+    <button *ngIf="!selected.length"
+      mat-icon-button aria-label="icon-button with more_vert icon"
+      [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openDialog('signout')" aria-label="Sign out button">Déconnexion</button>
+    </mat-menu>
+  </mat-toolbar>
+</p>
 <ng-container *ngIf="list.length; else empty">
   <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
-    <mat-list-option *ngFor="let course of list; trackBy: trackByMethod" [value]="course">
+    <mat-list-option *ngFor="let course of list; trackBy: trackByMethod" [value]="course" [selected]="isSelected(course)">
       {{course.name}}
     </mat-list-option>
   </mat-selection-list>
@@ -8,24 +42,11 @@
 <ng-template #empty>
   <div class="empty-section">
     <img class="illustration" src="assets/no-data.svg" />
-    <h3>Pas encore de cours enregisté</h3>
+    <h3>Pas encore de cours enregistré</h3>
   </div>
 </ng-template>
 <button
-  mat-mini-fab class="fab-btn-signout"
-  aria-label="Sign out button"
-  (click)="openDialog()">
-  <mat-icon>flight_takeoff</mat-icon>
-</button>
-<button
-  *ngIf="selected.length"
-  mat-mini-fab color="primary" class="fab-btn-trash"
-  aria-label="Remove courses button"
-  (click)="removeCourses()"
->
-  <mat-icon>delete</mat-icon>
-</button>
-<button
+  *ngIf="!selected.length"
   mat-fab color="primary" class="fab-btn-add-classes"
   aria-label="Add courses button"
   routerLink="/add-classes"

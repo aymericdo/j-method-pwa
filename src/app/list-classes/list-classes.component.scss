@@ -4,6 +4,10 @@
     color: white;
   }
 
+  .spacer {
+    flex-grow: 1;
+  }
+
   .empty-section {
     position: absolute;
     top: 45%;
@@ -19,19 +23,6 @@
   .fab-btn-add-classes {
     position: fixed;
     right: 1em;
-    bottom: 1em;
-  }
-
-  .fab-btn-signout {
-    position: fixed;
-    left: 1em;
-    bottom: 1em;
-  }
-
-  .fab-btn-trash {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
     bottom: 1em;
   }
 }

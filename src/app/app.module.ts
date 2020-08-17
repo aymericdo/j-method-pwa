@@ -15,8 +15,15 @@ import { environment } from '../environments/environment';
 import { AddClassesComponent } from './add-classes/add-classes.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfirmationSignoutDialogComponent, ListClassesComponent } from './list-classes/list-classes.component';
-
+import { ConfirmationSignoutDialogComponent, DaySchedulerDialogComponent, ListClassesComponent } from './list-classes/list-classes.component';
+import { HoursSelectorComponent } from './list-classes/hours-selector/hours-selector.dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
+import { ScrollableDirective } from './shared/scroll-to/scrollable.directive';
+import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
 
 @NgModule({
   declarations: [
@@ -24,6 +31,11 @@ import { ConfirmationSignoutDialogComponent, ListClassesComponent } from './list
     AddClassesComponent,
     ListClassesComponent,
     ConfirmationSignoutDialogComponent,
+    DaySchedulerDialogComponent,
+    HoursSelectorComponent,
+    InfiniteScrollComponent,
+    ScrollableDirective,
+    OffsetTopDirective,
   ],
   imports: [
     BrowserModule,
@@ -37,8 +49,12 @@ import { ConfirmationSignoutDialogComponent, ListClassesComponent } from './list
     MatInputModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatBottomSheetModule,
     FormsModule,
     MatFormFieldModule,
+    MatToolbarModule,
+    MatMenuModule,
+    HttpClientModule,
   ],
   entryComponents: [
     ConfirmationSignoutDialogComponent,
