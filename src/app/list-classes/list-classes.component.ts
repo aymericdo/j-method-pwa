@@ -75,10 +75,10 @@ export class ListClassesComponent implements OnInit {
       });
     });
 
-    // batch.then((event) => {
-    //   console.log('all events now dynamically delete!!!');
-    //   console.log(event);
-    // });
+    batch.then((event) => {
+      console.log('all events now dynamically delete!!!');
+      console.log(event);
+    });
 
     const newList = courses.filter((c: Course) => !this.isSelected(c));
     this.selected = [];
