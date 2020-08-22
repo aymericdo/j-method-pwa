@@ -15,4 +15,16 @@
       font-size: 2em;
     }
   }
+
+  .empty-section {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .illustration {
+    display: block;
+    height: 200px;
+  }
 }

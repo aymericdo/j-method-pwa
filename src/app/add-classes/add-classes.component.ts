@@ -78,7 +78,7 @@ export class AddClassesComponent {
       name: this.name,
       description: this.description,
       difficulties: this.difficulties,
-      date: moment().format('YYYY/MM/DD'),
+      date: moment().format('YYYY-MM-DD'),
       ids,
     };
 
