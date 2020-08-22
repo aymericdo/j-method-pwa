@@ -1,0 +1,18 @@
+<div class="first-row">
+  <span class="countdown">{{displayCountdown}}</span>
+</div>
+<div class="second-row">
+  <ng-container *ngIf="list.length; else empty">
+    <mat-list>
+      <mat-list-item *ngFor="let notif of list; trackBy: trackByMethod" [value]="notif">
+        {{notif.course.name}}
+      </mat-list-item>
+    </mat-list>
+  </ng-container>
+  <ng-template #empty>
+    <div class="empty-section">
+      <img class="illustration" src="assets/no-data.svg" />
+      <h3>Pas encore de notif enregistrée</h3>
+    </div>
+  </ng-template>
+</div>

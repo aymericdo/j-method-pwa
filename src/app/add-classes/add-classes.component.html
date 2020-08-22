@@ -22,7 +22,11 @@
     </mat-button-toggle-group>
   </div>
   <div class="section-row">
-    <button [disabled]="!name || submitting" mat-stroked-button color="primary" value="Enregistrer">Enregistrer</button>
+    <div class="google-checkbox">
+      <mat-checkbox [checked]="sendToGoogleCalendar" (change)="sendToGoogleCalendar = !sendToGoogleCalendar"
+      [disabled]="submitting">Envoyer dans ton calendrier</mat-checkbox>
+    </div>
+    <button class="submit-button" [disabled]="!name || submitting" mat-stroked-button color="primary" value="Enregistrer">Enregistrer</button>
   </div>
 </form>
 <div *ngIf="submitting" class="progress-spinner">

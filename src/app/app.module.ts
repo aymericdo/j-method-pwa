@@ -15,15 +15,20 @@ import { environment } from '../environments/environment';
 import { AddClassesComponent } from './add-classes/add-classes.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfirmationSignoutDialogComponent, DaySchedulerDialogComponent, ListClassesComponent } from './list-classes/list-classes.component';
-import { HoursSelectorComponent } from './list-classes/hours-selector/hours-selector.dialog';
-import { HttpClientModule } from '@angular/common/http';
+import { ListClassesComponent } from './list-classes/list-classes.component';
+import { HoursSelectorDialogComponent } from './list-classes/hours-selector-dialog/hours-selector-dialog.component';
+import { ConfirmationSignoutDialogComponent } from './list-classes/confirmation-signout-dialog/confirmation-signout-dialog.component';
+import { DaySchedulerDialogComponent } from './list-classes/day-scheduler-dialog/day-scheduler-dialog.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
 import { ScrollableDirective } from './shared/scroll-to/scrollable.directive';
 import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
+import { EmailInterceptor } from './email-interceptor';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
 
 @NgModule({
   declarations: [
@@ -32,34 +37,42 @@ import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
     ListClassesComponent,
     ConfirmationSignoutDialogComponent,
     DaySchedulerDialogComponent,
-    HoursSelectorComponent,
+    HoursSelectorDialogComponent,
     InfiniteScrollComponent,
     ScrollableDirective,
     OffsetTopDirective,
+    DailyScheduleComponent,
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule,
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
-    MatIconModule,
-    MatListModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
+    MatCheckboxModule,
     MatDialogModule,
-    MatBottomSheetModule,
-    FormsModule,
     MatFormFieldModule,
-    MatToolbarModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
     MatMenuModule,
-    HttpClientModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   entryComponents: [
     ConfirmationSignoutDialogComponent,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: EmailInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

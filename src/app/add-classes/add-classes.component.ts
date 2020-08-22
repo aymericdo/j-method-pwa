@@ -1,8 +1,8 @@
 import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-
-const CPT = 0;
+import { Course, Difficulties } from '../list-classes/list-classes.component';
+import { CourseService } from '../course.service';
 
 @Component({
   selector: 'app-add-classes',
@@ -12,17 +12,18 @@ const CPT = 0;
 export class AddClassesComponent {
   name = '';
   description = '';
-  difficulties = 'easy';
+  difficulties: Difficulties = 'easy';
+  sendToGoogleCalendar = false;
   submitting = false;
 
   constructor(
     private router: Router,
     private zone: NgZone,
+    private courseService: CourseService,
   ) {}
 
   saveCourses(): void {
     this.submitting = true;
-    const courses = JSON.parse(localStorage.getItem('courses')) || [];
 
     const reminders: string[] = [];
     reminders.push(moment().add(1, 'day').format('YYYY-MM-DD'));
@@ -52,28 +53,39 @@ export class AddClassesComponent {
       }
     }));
 
-    const batch = gapi.client.newBatch();
-    events.forEach((e) => {
-      batch.add(gapi.client.calendar.events.insert({
-        calendarId: 'primary',
-        resource: e,
-      }));
-    });
-
-    batch.then((event) => {
-      console.log('all events now dynamically added!!!');
-      console.log(event);
-      const ids = Object.keys(event.result).map(k => event.result[k].result.id);
-      courses.push({
-        name: this.name,
-        description: this.description,
-        difficulties: this.difficulties,
-        date: moment().format('YYYY/MM/DD'),
-        ids,
+    if (this.sendToGoogleCalendar) {
+      const batch = gapi.client.newBatch();
+      events.forEach((e) => {
+        batch.add(gapi.client.calendar.events.insert({
+          calendarId: 'primary',
+          resource: e,
+        }));
       });
-      localStorage.setItem('courses', JSON.stringify(courses));
-      this.submitting = false;
-      this.zone.run(() => this.router.navigate(['/home']));
-    });
+
+      batch.then((event) => {
+        console.log('all events now dynamically added!!!');
+        console.log(event);
+        const ids = Object.keys(event.result).map(k => event.result[k].result.id);
+        this.handleSuccess(ids);
+      });
+    } else {
+      this.handleSuccess();
+    }
+  }
+
+  private handleSuccess(ids: string[] = null): void {
+    const newCourse = {
+      name: this.name,
+      description: this.description,
+      difficulties: this.difficulties,
+      date: moment().format('YYYY/MM/DD'),
+      ids,
+    };
+
+    this.courseService.addCourse(newCourse)
+      .subscribe(() => {
+        this.submitting = false;
+        this.zone.run(() => this.router.navigate(['/home']));
+      });
   }
 }

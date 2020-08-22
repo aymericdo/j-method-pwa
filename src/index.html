@@ -25,6 +25,7 @@
       const profile = googleUser.getBasicProfile();
 
       localStorage.setItem('token', googleUser.getAuthResponse().id_token);
+      localStorage.setItem('email', profile.getEmail());
 
       gapi.load('client:auth2', () => {
         gapi.client.load('calendar', 'v3', () => {
@@ -37,7 +38,7 @@
     }
 
     document.addEventListener('signout', () => {
-      localStorage.removeItem('token');
+      localStorage.clear();
       document.getElementById('googleBtn').style.display = 'block';
     });
   </script>

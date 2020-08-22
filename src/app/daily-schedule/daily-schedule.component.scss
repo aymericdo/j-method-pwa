@@ -1,0 +1,18 @@
+:host {
+  .first-row,
+  .second-row {
+    height: 50%;
+    display: block;
+  }
+
+  .first-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .countdown {
+      color: white;
+      font-size: 2em;
+    }
+  }
+}
