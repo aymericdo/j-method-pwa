@@ -21,13 +21,15 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.list = notifications.filter((n) => moment(n.date).isAfter(moment()));
-      this.countdown = +moment(this.list[0].date).diff(moment(), 'second');
+      if (notifications.length) {
+        this.list = notifications.filter((n) => moment(n.date).isAfter(moment()));
+        this.countdown = +moment(this.list[0].date).diff(moment(), 'second');
 
-      this.interval = setInterval(() => {
-        this.countdown -= 1;
-        this.displayCountdown = new Date(this.countdown * 1000).toISOString().substr(11, 8);
-      }, 1000);
+        this.interval = setInterval(() => {
+          this.countdown -= 1;
+          this.displayCountdown = new Date(this.countdown * 1000).toISOString().substr(11, 8);
+        }, 1000);
+      }
     });
   }
 
