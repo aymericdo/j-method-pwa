@@ -74,6 +74,7 @@ export class DaySchedulerDialogComponent implements OnInit, OnDestroy {
       notifs.push({
         course: dl.course,
         date: currentDate.add(dl.duration, 'minute').format(),
+        durationBefore: dl.duration,
       });
     });
 

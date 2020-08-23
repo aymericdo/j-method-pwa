@@ -1,11 +1,13 @@
 <div class="first-row">
-  <span class="countdown">{{displayCountdown}}</span>
+  <span *ngIf="!!countdown" class="countdown">{{displayCountdown}}</span>
 </div>
 <div class="second-row">
   <ng-container *ngIf="list.length; else empty">
     <mat-list>
-      <mat-list-item *ngFor="let notif of list; trackBy: trackByMethod" [value]="notif">
+      <mat-list-item *ngFor="let notif of list; let isFirst = first; trackBy: trackByMethod" [value]="notif">
         {{notif.course.name}}
+        <span *ngIf="isFirst" class="underliner" [style.width]="percentageAccomplished"></span>
+        <span *ngIf="!isFirst" class="underliner" [style.width]="'100%'"></span>
       </mat-list-item>
     </mat-list>
   </ng-container>

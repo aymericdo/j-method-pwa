@@ -23,6 +23,7 @@ export interface Notification {
   _id?: string;
   course: Course;
   date: string;
+  durationBefore: number;
 }
 
 @Component({
