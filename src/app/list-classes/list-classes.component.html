@@ -46,6 +46,14 @@
   </div>
 </ng-template>
 <button
+  *ngIf="notifications.length"
+  mat-mini-fab color="primary" class="fab-btn-daily-schedule"
+  aria-label="Go notifications button"
+  routerLink="/daily-schedule"
+>
+  <mat-icon>alarm_add</mat-icon>
+</button>
+<button
   *ngIf="!selected.length"
   mat-fab color="primary" class="fab-btn-add-classes"
   aria-label="Add courses button"

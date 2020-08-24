@@ -7,6 +7,7 @@ import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialo
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -34,6 +35,7 @@ export interface Notification {
 export class ListClassesComponent implements OnInit {
   list: Course[] = [];
   selected: Course[] = [];
+  notifications: Notification[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -43,6 +45,10 @@ export class ListClassesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
+      this.notifications = notifications.filter((n) => moment(n.date).isAfter(moment()));
+    });
+
     this.courseService.getCourses().subscribe((courses: Course[]) => {
       this.list = courses;
     });
