@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class DailyScheduleComponent implements OnInit, OnDestroy {
   list: Notification[] = [];
-  countdown: number;
+  countdown = 0;
   displayCountdown: string;
   percentageAccomplished: string;
 
@@ -24,8 +24,8 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      if (notifications.length) {
-        this.list = notifications.filter((n) => moment(n.date).isAfter(moment()));
+      this.list = notifications.filter((n) => moment(n.date).isAfter(moment()));
+      if (this.list.length) {
 
         if (this.list.length) {
           this.setCountdown();
