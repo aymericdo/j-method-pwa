@@ -2,12 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { CourseService } from '../course.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { selectNotifications, selectCourses, selectSelectedCourses } from '../store/current-session.reducer';
+import { Store, select } from '@ngrx/store';
+import { setNotifications, setCourses, setSelectedCourses } from '../store/current-session.actions';
+import { take } from 'rxjs/operators';
+import { AppState } from '../store';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -33,38 +38,46 @@ export interface Notification {
   styleUrls: ['./list-classes.component.scss']
 })
 export class ListClassesComponent implements OnInit {
-  list: Course[] = [];
-  selected: Course[] = [];
-  notifications: Notification[] = [];
+  list$: Observable<Course[]>;
+  selected$: Observable<Course[]>;
+  notifications$: Observable<Notification[]>;
 
   constructor(
     private dialog: MatDialog,
     private courseService: CourseService,
     private notificationService: NotificationService,
     private router: Router,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.notifications = notifications.filter((n) => moment(n.date).isAfter(moment()));
+      this.store.dispatch(setNotifications({ notifications: notifications.filter((n) => moment(n.date).isAfter(moment())) }));
     });
 
     this.courseService.getCourses().subscribe((courses: Course[]) => {
-      this.list = courses;
+      this.store.dispatch(setCourses({ courses }));
     });
+
+    this.list$ = this.store.pipe(select(selectCourses));
+    this.notifications$ = this.store.pipe(select(selectNotifications));
+    this.selected$ = this.store.pipe(select(selectSelectedCourses));
   }
 
   openDialog(dialog: 'scheduler' | 'signout'): void {
     if (dialog === 'scheduler') {
+      let selected = [];
+      this.store.pipe(select(selectSelectedCourses), take(1)).subscribe((sltd => selected = sltd));
       const daySchedulerDialogRef = this.dialog.open(DaySchedulerDialogComponent, {
         height: '400px',
         width: '600px',
-        data: { selected: this.selected },
+        data: { selected },
       });
 
       daySchedulerDialogRef.afterClosed().subscribe((result: Notification[]) => {
         if (result) {
           this.notificationService.addNotifications(result).subscribe(() => {
+            this.unselectAll();
             this.router.navigate(['/daily-schedule']);
           });
         }
@@ -75,30 +88,33 @@ export class ListClassesComponent implements OnInit {
   }
 
   onSelection(event: MatSelectionListChange, courses: MatSelectionList): void {
-    this.selected = courses.selectedOptions.selected.map((s: MatListOption) => s.value);
+    this.store.dispatch(setSelectedCourses({
+      selectedCourses: courses.selectedOptions.selected.map((s: MatListOption) => s.value) as Course[],
+    }));
   }
 
   isSelected(course: Course): boolean {
-    return this.selected.some(s => s._id === course._id);
+    let selected = [];
+    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(sltd => selected = sltd);
+    return selected && selected.some(s => s._id === course._id);
   }
 
   unselectAll(): void {
-    this.selected = [];
-  }
-
-  scheduleCourses(): void {
-    console.log(this.selected.map(s => s.ids));
+    this.store.dispatch(setSelectedCourses({ selectedCourses: [] }));
   }
 
   removeCourses(): void {
-    const deleteSelectedCourses$ = this.selected.map((s) => {
+    let selected = [];
+    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(sltd => selected = sltd);
+
+    const deleteSelectedCourses$ = selected.map((s) => {
       return this.courseService.deleteCourse(s);
     });
 
     forkJoin(deleteSelectedCourses$).subscribe(() => {
       const batch = gapi.client.newBatch();
 
-      const googleCalendarCourses = this.selected.map(s => s.ids).filter(Boolean);
+      const googleCalendarCourses = selected.map(s => s.ids).filter(Boolean);
 
       if (googleCalendarCourses.length) {
         googleCalendarCourses.forEach((ids) => {
@@ -122,9 +138,14 @@ export class ListClassesComponent implements OnInit {
   }
 
   private handleSuccess(): void {
-    const newList = this.list.filter((c: Course) => !this.isSelected(c));
-    this.selected = [];
-    this.list = newList;
+    let list = [];
+    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(l => list = l);
+
+    const newList = list.filter((c: Course) => !this.isSelected(c));
+    this.unselectAll();
+    this.store.dispatch(setSelectedCourses({
+      selectedCourses: newList,
+    }));
   }
 
   trackByMethod(index: number, el: Course): string {

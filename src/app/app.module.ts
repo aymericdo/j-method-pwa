@@ -29,6 +29,9 @@ import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
 import { EmailInterceptor } from './email-interceptor';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { metaReducers, reducers } from './store';
 
 @NgModule({
   declarations: [
@@ -62,6 +65,14 @@ import { DailyScheduleComponent } from './daily-schedule/daily-schedule.componen
     MatProgressSpinnerModule,
     MatToolbarModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
   entryComponents: [
     ConfirmationSignoutDialogComponent,

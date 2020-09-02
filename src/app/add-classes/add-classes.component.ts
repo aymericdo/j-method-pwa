@@ -1,8 +1,11 @@
 import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Course, Difficulties } from '../list-classes/list-classes.component';
+import { Difficulties } from '../list-classes/list-classes.component';
 import { CourseService } from '../course.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store/current-session.reducer';
+import { addCourse } from '../store/current-session.actions';
 
 @Component({
   selector: 'app-add-classes',
@@ -20,6 +23,7 @@ export class AddClassesComponent {
     private router: Router,
     private zone: NgZone,
     private courseService: CourseService,
+    private store: Store<AppState>,
   ) {}
 
   saveCourses(): void {
@@ -84,6 +88,7 @@ export class AddClassesComponent {
 
     this.courseService.addCourse(newCourse)
       .subscribe(() => {
+        this.store.dispatch(addCourse({ course: newCourse }));
         this.submitting = false;
         this.zone.run(() => this.router.navigate(['/home']));
       });

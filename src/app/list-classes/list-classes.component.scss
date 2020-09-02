@@ -28,7 +28,17 @@
 
   .fab-btn-daily-schedule {
     position: fixed;
-    right: 1.5em;
-    bottom: 8em;
+    right: 1.625em;
+    bottom: 6.125em;
+  }
+
+  .-blinking {
+    animation: blinkingBackground 1s infinite;
+  }
+
+  @keyframes blinkingBackground {
+    0%{ background-color: #c2185b; }
+    50%{ background-color: #c46188; }
+    100%{ background-color: #c2185b;    }
   }
 }
