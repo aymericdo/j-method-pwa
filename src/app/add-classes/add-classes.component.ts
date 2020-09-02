@@ -4,8 +4,8 @@ import * as moment from 'moment';
 import { Difficulties } from '../list-classes/list-classes.component';
 import { CourseService } from '../course.service';
 import { Store } from '@ngrx/store';
-import { AppState } from '../store/current-session.reducer';
 import { addCourse } from '../store/current-session.actions';
+import { AppState } from '../store';
 
 @Component({
   selector: 'app-add-classes',

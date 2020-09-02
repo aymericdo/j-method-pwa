@@ -139,12 +139,12 @@ export class ListClassesComponent implements OnInit {
 
   private handleSuccess(): void {
     let list = [];
-    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(l => list = l);
+    this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
 
     const newList = list.filter((c: Course) => !this.isSelected(c));
     this.unselectAll();
-    this.store.dispatch(setSelectedCourses({
-      selectedCourses: newList,
+    this.store.dispatch(setCourses({
+      courses: newList,
     }));
   }
 
