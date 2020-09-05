@@ -6,7 +6,26 @@
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
 <div class="first-row">
-  <span *ngIf="!!countdown" class="countdown">{{displayCountdown}}</span>
+  <ng-container *ngIf="!!countdown">
+    {{ countdown }}
+    <span class="countdown">{{displayCountdown}}</span>
+    <button
+      *ngIf="!(onPause$ | async)"
+      mat-mini-fab color="primary" class="fab-btn-pause-button"
+      aria-label="Toggle pause mode button"
+      (click)="togglePauseMode()"
+    >
+      <mat-icon>pause_circle_filled</mat-icon>
+    </button>
+    <button
+      *ngIf="(onPause$ | async)"
+      mat-mini-fab color="primary" class="fab-btn-play-button"
+      aria-label="Toggle play mode button"
+      (click)="togglePauseMode()"
+    >
+      <mat-icon>play_circle_outline</mat-icon>
+    </button>
+  </ng-container>
 </div>
 <div class="second-row">
   <ng-container *ngIf="(notifications$ | async)?.length; else empty">

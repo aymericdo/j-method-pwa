@@ -75,6 +75,7 @@ export class DaySchedulerDialogComponent implements OnInit, OnDestroy {
         course: dl.course,
         date: currentDate.add(dl.duration, 'minute').format(),
         durationBefore: dl.duration,
+        isOnPauseSince: null,
       });
     });
 

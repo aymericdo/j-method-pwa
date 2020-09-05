@@ -7,7 +7,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { setNotifications, shiftNotification } from '../store/current-session.actions';
 import { Store, select } from '@ngrx/store';
-import { selectNotifications } from '../store/current-session.reducer';
+import { selectNotifications, selectIsOnPause } from '../store/current-session.reducer';
 import { AppState } from '../store';
 
 @Component({
@@ -17,9 +17,11 @@ import { AppState } from '../store';
 })
 export class DailyScheduleComponent implements OnInit, OnDestroy {
   notifications$: Observable<Notification[]>;
+  onPause$: Observable<boolean>;
   countdown = 0;
   displayCountdown: string;
   percentageAccomplished: string;
+  notifications: Notification[];
 
   private interval: NodeJS.Timeout;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -32,9 +34,10 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.notifications$ = this.store.pipe(select(selectNotifications));
+    this.onPause$ = this.store.pipe(select(selectIsOnPause));
 
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.store.dispatch(setNotifications({ notifications: notifications.filter((n) => moment(n.date).isAfter(moment())) }));
+      this.store.dispatch(setNotifications({ notifications }));
     });
 
     this.notifications$.pipe(filter(notifs => !!notifs.length), takeUntil(this.destroyed$)).subscribe((notifications: Notification[]) => {
@@ -43,18 +46,22 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
       this.setCountdown(notifications);
       this.setPercentageAccomplished(notifications);
 
-      this.interval = setInterval(() => {
-        this.countdown -= 1;
-        this.setPercentageAccomplished(notifications);
-        if (this.countdown < 1) {
-          this.store.dispatch(shiftNotification());
-          if (notifications.length < 2) {
-            this.router.navigate(['/home']);
+      this.notifications = notifications;
+
+      if (!notifications[0].isOnPauseSince) {
+        this.interval = setInterval(() => {
+          this.countdown -= 1;
+          this.setPercentageAccomplished(notifications);
+          if (this.countdown < 1) {
+            this.store.dispatch(shiftNotification());
+            if (notifications.length < 2) {
+              this.router.navigate(['/home']);
+            }
+          } else {
+            this.displayCountdown = new Date(this.countdown * 1000).toISOString().substr(11, 8);
           }
-        } else {
-          this.displayCountdown = new Date(this.countdown * 1000).toISOString().substr(11, 8);
-        }
-      }, 1000);
+        }, 1000);
+      }
     });
   }
 
@@ -70,7 +77,18 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
   }
 
   setCountdown(notifications: Notification[]): void {
-    this.countdown = +moment(notifications[0].date).diff(moment(), 'second');
+    if (notifications[0].isOnPauseSince) {
+      this.countdown = +moment(notifications[0].date).diff(moment(notifications[0].isOnPauseSince), 'second');
+    } else {
+      this.countdown = +moment(notifications[0].date).diff(moment(), 'second');
+    }
+    this.displayCountdown = new Date(this.countdown * 1000).toISOString().substr(11, 8);
+  }
+
+  togglePauseMode(): void {
+    this.notificationService.pauseNotifications().subscribe((notifications: Notification[]) => {
+      this.store.dispatch(setNotifications({ notifications }));
+    });
   }
 
   trackByMethod(index: number, el: Notification): string {

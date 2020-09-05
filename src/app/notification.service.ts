@@ -25,4 +25,8 @@ export class NotificationService {
   getNotifications(): Observable<Notification[]> {
     return this.httpClient.get<Notification[]>(`${this.server}/api/notifications`);
   }
+
+  pauseNotifications(): Observable<Notification[]> {
+    return this.httpClient.post<Notification[]>(`${this.server}/api/notifications/pause`, null);
+  }
 }

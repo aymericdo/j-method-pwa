@@ -30,6 +30,7 @@ export interface Notification {
   course: Course;
   date: string;
   durationBefore: number;
+  isOnPauseSince: string;
 }
 
 @Component({
@@ -52,7 +53,7 @@ export class ListClassesComponent implements OnInit {
 
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.store.dispatch(setNotifications({ notifications: notifications.filter((n) => moment(n.date).isAfter(moment())) }));
+      this.store.dispatch(setNotifications({ notifications }));
     });
 
     this.courseService.getCourses().subscribe((courses: Course[]) => {

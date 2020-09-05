@@ -6,6 +6,7 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable()
 export class EmailInterceptor implements HttpInterceptor {
@@ -17,6 +18,7 @@ export class EmailInterceptor implements HttpInterceptor {
     request = request.clone({
       setHeaders: {
         email,
+        now: moment().format(),
       }
     });
     return next.handle(request);

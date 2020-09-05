@@ -42,3 +42,7 @@ export const selectSelectedCourses = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.selectedCourses,
 );
+export const selectIsOnPause = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => !!state.notifications[0].isOnPauseSince,
+);
