@@ -34,8 +34,10 @@
 </p>
 <ng-container *ngIf="(list$ | async)?.length; else empty">
   <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
-    <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod" [value]="course" [selected]="isSelected(course)">
+    <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
+      [value]="course" [selected]="isSelected(course)">
       {{course.name}}
+      <span class="revision-day" *ngIf="isADayRevision(course)">Cours à réviser aujourd'hui !</span>
     </mat-list-option>
   </mat-selection-list>
 </ng-container>

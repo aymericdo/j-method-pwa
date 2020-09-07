@@ -7,12 +7,12 @@ import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialo
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { selectNotifications, selectCourses, selectSelectedCourses } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
 import { setNotifications, setCourses, setSelectedCourses } from '../store/current-session.actions';
 import { take } from 'rxjs/operators';
 import { AppState } from '../store';
+import * as moment from 'moment';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -98,6 +98,20 @@ export class ListClassesComponent implements OnInit {
     let selected = [];
     this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(sltd => selected = sltd);
     return selected && selected.some(s => s._id === course._id);
+  }
+
+  isADayRevision(course: Course): boolean {
+    const creationDate = moment(course.date);
+    const reminders: string[] = [];
+    reminders.push(creationDate.add(1, 'day').format('YYYY-MM-DD'));
+    if (course.difficulties === 'tough') {
+      reminders.push(moment().add(2, 'day').format('YYYY-MM-DD'));
+    }
+    reminders.push(creationDate.add(5, 'day').format('YYYY-MM-DD'));
+    reminders.push(creationDate.add(15, 'day').format('YYYY-MM-DD'));
+    reminders.push(creationDate.add(30, 'day').format('YYYY-MM-DD'));
+
+    return reminders.includes(moment().format('YYYY-MM-DD'));
   }
 
   unselectAll(): void {
