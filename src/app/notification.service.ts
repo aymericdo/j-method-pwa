@@ -29,4 +29,8 @@ export class NotificationService {
   pauseNotifications(): Observable<Notification[]> {
     return this.httpClient.post<Notification[]>(`${this.server}/api/notifications/pause`, null);
   }
+
+  deleteNotifications(notificationId: string): Observable<Notification[]> {
+    return this.httpClient.delete<Notification[]>(`${this.server}/api/notifications/${notificationId}`);
+  }
 }

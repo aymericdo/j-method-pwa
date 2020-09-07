@@ -15,6 +15,14 @@
       color: white;
       font-size: 2em;
     }
+
+    .buttons-section {
+      display: flex;
+
+      & > button {
+        margin-right: 1em;
+      }
+    }
   }
 
   .empty-section {

@@ -7,24 +7,32 @@
 </button>
 <div class="first-row">
   <ng-container *ngIf="!!countdown">
-    {{ countdown }}
     <span class="countdown">{{displayCountdown}}</span>
-    <button
-      *ngIf="!(onPause$ | async)"
-      mat-mini-fab color="primary" class="fab-btn-pause-button"
-      aria-label="Toggle pause mode button"
-      (click)="togglePauseMode()"
-    >
-      <mat-icon>pause_circle_filled</mat-icon>
-    </button>
-    <button
-      *ngIf="(onPause$ | async)"
-      mat-mini-fab color="primary" class="fab-btn-play-button"
-      aria-label="Toggle play mode button"
-      (click)="togglePauseMode()"
-    >
-      <mat-icon>play_circle_outline</mat-icon>
-    </button>
+    <div class="buttons-section">
+      <button
+        *ngIf="!(onPause$ | async)"
+        mat-mini-fab color="primary" class="fab-btn-pause-button"
+        aria-label="Toggle pause mode button"
+        (click)="togglePauseMode()"
+        >
+        <mat-icon>pause_circle_filled</mat-icon>
+      </button>
+      <button
+        *ngIf="(onPause$ | async)"
+        mat-mini-fab color="primary" class="fab-btn-play-button"
+        aria-label="Toggle play mode button"
+        (click)="togglePauseMode()"
+        >
+        <mat-icon>play_circle_outline</mat-icon>
+      </button>
+      <button
+        mat-mini-fab color="primary" class="fab-btn-next-button"
+        aria-label="Toggle next mode button"
+        (click)="nextCourse()"
+      >
+        <mat-icon>skip_next</mat-icon>
+      </button>
+    </div>
   </ng-container>
 </div>
 <div class="second-row">
