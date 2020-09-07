@@ -101,15 +101,14 @@ export class ListClassesComponent implements OnInit {
   }
 
   isADayRevision(course: Course): boolean {
-    const creationDate = moment(course.date);
     const reminders: string[] = [];
-    reminders.push(creationDate.add(1, 'day').format('YYYY-MM-DD'));
+    reminders.push(moment(course.date).add(1, 'day').format('YYYY-MM-DD'));
     if (course.difficulties === 'tough') {
-      reminders.push(moment().add(2, 'day').format('YYYY-MM-DD'));
+      reminders.push(moment(course.date).add(2, 'day').format('YYYY-MM-DD'));
     }
-    reminders.push(creationDate.add(5, 'day').format('YYYY-MM-DD'));
-    reminders.push(creationDate.add(15, 'day').format('YYYY-MM-DD'));
-    reminders.push(creationDate.add(30, 'day').format('YYYY-MM-DD'));
+    reminders.push(moment(course.date).add(5, 'day').format('YYYY-MM-DD'));
+    reminders.push(moment(course.date).add(15, 'day').format('YYYY-MM-DD'));
+    reminders.push(moment(course.date).add(30, 'day').format('YYYY-MM-DD'));
 
     return reminders.includes(moment().format('YYYY-MM-DD'));
   }
