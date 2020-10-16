@@ -24,6 +24,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
+import { SpeedDialFabComponent } from './shared/speed-dial-fab/speed-dial-fab.component';
 import { ScrollableDirective } from './shared/scroll-to/scrollable.directive';
 import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
 import { EmailInterceptor } from './email-interceptor';
@@ -32,6 +33,8 @@ import { DailyScheduleComponent } from './daily-schedule/daily-schedule.componen
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { metaReducers, reducers } from './store';
+import { TodayClassesComponent } from './today-classes/today-classes.component';
+import { DescriptionClassComponent } from './description-class/description-class.component';
 
 @NgModule({
   declarations: [
@@ -42,9 +45,12 @@ import { metaReducers, reducers } from './store';
     DaySchedulerDialogComponent,
     HoursSelectorDialogComponent,
     InfiniteScrollComponent,
+    SpeedDialFabComponent,
     ScrollableDirective,
     OffsetTopDirective,
     DailyScheduleComponent,
+    TodayClassesComponent,
+    DescriptionClassComponent,
   ],
   imports: [
     AppRoutingModule,

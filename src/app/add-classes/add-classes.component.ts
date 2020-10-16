@@ -16,7 +16,7 @@ export class AddClassesComponent {
   name = '';
   description = '';
   difficulties: Difficulties = 'easy';
-  sendToGoogleCalendar = false;
+  sendToGoogleCalendar = true;
   submitting = false;
 
   constructor(

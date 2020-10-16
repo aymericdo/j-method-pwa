@@ -1,0 +1,8 @@
+<div>
+  <span>Nom</span>
+  <h1 [innerHTML]="(selectedCourse$ | async)?.name"></h1>
+  <span>Description</span>
+  <h3 [innerHTML]="(selectedCourse$ | async)?.description"></h3>
+  <span>Créé le</span>
+  <h3>{{createdDate((selectedCourse$ | async)?.date)}}</h3>
+</div>

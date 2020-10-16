@@ -8,6 +8,11 @@
     flex-grow: 1;
   }
 
+  .version {
+    margin-left: 0.825em;
+    font-size: 0.625em;
+  }
+
   .empty-section {
     position: absolute;
     top: 45%;
@@ -23,12 +28,6 @@
   .revision-day {
     font-size: 0.875em;
     color: #c2185b;
-  }
-
-  .fab-btn-add-classes {
-    position: fixed;
-    right: 1em;
-    bottom: 1em;
   }
 
   .fab-btn-daily-schedule {

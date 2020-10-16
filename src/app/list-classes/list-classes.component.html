@@ -5,8 +5,8 @@
       (click)='unselectAll()'>
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
-    <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J (v1.1.2)'"></span>
-
+    <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
+    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v1.1.3)'"></span>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
@@ -19,6 +19,12 @@
       mat-icon-button aria-label="Schedule courses button"
       (click)="openDialog('scheduler')">
       <mat-icon>alarm_add</mat-icon>
+    </button>
+
+    <button *ngIf="(selected$ | async)?.length === 1"
+      mat-icon-button aria-label="More info courses button"
+      [routerLink]="['/detail-class', (selected$ | async)[0]._id]">
+      <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
 
     <button *ngIf="!(selected$ | async)?.length"
@@ -55,10 +61,10 @@
 >
   <mat-icon>alarm_add</mat-icon>
 </button>
-<button *ngIf="!(selected$ | async)?.length"
-  mat-fab color="primary" class="fab-btn-add-classes"
-  aria-label="Add courses button"
-  routerLink="/add-classes"
->
-  <mat-icon>add</mat-icon>
-</button>
+<app-speed-dial-fab
+  *ngIf="!(selected$ | async)?.length"
+  (redirect)="navigateTo($event)"
+  [mainButtonIcon]="'donut_large'"
+  [fabButtons]="fabButtons"
+  aria-label="Opt courses button"
+></app-speed-dial-fab>

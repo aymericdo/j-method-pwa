@@ -43,6 +43,14 @@ export class ListClassesComponent implements OnInit {
   selected$: Observable<Course[]>;
   notifications$: Observable<Notification[]>;
 
+  fabButtons = [{
+    id: 0,
+    icon: 'add',
+  }, {
+    id: 1,
+    icon: 'hourglass_bottom',
+  }];
+
   constructor(
     private dialog: MatDialog,
     private courseService: CourseService,
@@ -149,6 +157,20 @@ export class ListClassesComponent implements OnInit {
         this.handleSuccess();
       }
     });
+  }
+
+  navigateTo(id: number): void {
+    switch (id) {
+      case 0: {
+        this.router.navigate(['add-classes']);
+        break;
+      }
+
+      case 1: {
+        this.router.navigate(['today-classes']);
+        break;
+      }
+    }
   }
 
   private handleSuccess(): void {

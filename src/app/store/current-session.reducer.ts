@@ -2,6 +2,7 @@ import { Action, createReducer, on, createSelector } from '@ngrx/store';
 import * as AppActions from './current-session.actions';
 import { Course, Notification } from '../list-classes/list-classes.component';
 import { AppState } from '.';
+import * as moment from 'moment';
 
 export interface CurrentSessionState {
   courses: Course[];
@@ -34,6 +35,23 @@ export const selectCourses = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.courses,
 );
+export const selectTodayCourses = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => {
+    return state.courses.filter(course => {
+      const reminders: string[] = [];
+      reminders.push(moment(course.date).add(1, 'day').format('YYYY-MM-DD'));
+      if (course.difficulties === 'tough') {
+        reminders.push(moment(course.date).add(2, 'day').format('YYYY-MM-DD'));
+      }
+      reminders.push(moment(course.date).add(5, 'day').format('YYYY-MM-DD'));
+      reminders.push(moment(course.date).add(15, 'day').format('YYYY-MM-DD'));
+      reminders.push(moment(course.date).add(30, 'day').format('YYYY-MM-DD'));
+
+      return reminders.includes(moment().format('YYYY-MM-DD'));
+    });
+  }
+);
 export const selectNotifications = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.notifications,
@@ -45,4 +63,8 @@ export const selectSelectedCourses = createSelector(
 export const selectIsOnPause = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => !!state.notifications[0].isOnPauseSince,
+);
+export const selectOpenedCourse = (id: string) => createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.courses.find(c => c._id === id),
 );

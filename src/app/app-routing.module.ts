@@ -4,6 +4,8 @@ import { AddClassesComponent } from './add-classes/add-classes.component';
 import { AuthGuardService as AuthGuard } from './auth-guard.service';
 import { ListClassesComponent } from './list-classes/list-classes.component';
 import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
+import { TodayClassesComponent } from './today-classes/today-classes.component';
+import { DescriptionClassComponent } from './description-class/description-class.component';
 
 const routes: Routes = [
   {
@@ -17,8 +19,18 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'today-classes',
+    component: TodayClassesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'daily-schedule',
     component: DailyScheduleComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'detail-class/:id',
+    component: DescriptionClassComponent,
     canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: '' }

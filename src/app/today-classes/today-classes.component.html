@@ -1,0 +1,13 @@
+<ng-container *ngIf="(list$ | async)?.length; else empty">
+  <mat-list #courses (selectionChange)="onSelection($event, courses)">
+    <mat-list-item *ngFor="let course of (list$ | async); trackBy: trackByMethod" [value]="course">
+      <ng-container>{{course.name}}</ng-container>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
+<ng-template #empty>
+  <div class="empty-section">
+    <img class="illustration" src="assets/no-data.svg" />
+    <h3>Pas encore de cours enregistré</h3>
+  </div>
+</ng-template>
