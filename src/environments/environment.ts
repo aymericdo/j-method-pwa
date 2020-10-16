@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  server: 'https://j-method.herokuapp.com',
+  server: 'http://localhost:3000',
 };
 
 /*
