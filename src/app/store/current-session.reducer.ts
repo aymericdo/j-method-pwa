@@ -39,6 +39,11 @@ export const selectTodayCourses = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => {
     return state.courses.filter(course => {
+      const todayCourses = JSON.parse(localStorage.getItem('todayCourses')) || {};
+      if (todayCourses[course._id] && todayCourses[course._id].some((date: string) => date === moment().format('YYYY-MM-DD'))) {
+        return false;
+      }
+
       const reminders: string[] = [];
       reminders.push(moment(course.date).add(1, 'day').format('YYYY-MM-DD'));
       if (course.difficulties === 'tough') {

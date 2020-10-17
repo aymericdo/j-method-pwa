@@ -29,6 +29,24 @@ export class TodayClassesComponent implements OnInit {
     this.list$ = this.store.pipe(select(selectTodayCourses));
   }
 
+  deleteCourse(course: Course, $event: Event): void {
+    $event.stopPropagation();
+    $event.preventDefault();
+    const todayCourses = JSON.parse(localStorage.getItem('todayCourses')) || {};
+
+    if (todayCourses[course._id] && todayCourses[course._id].length) {
+      todayCourses[course._id].push(moment().format('YYYY-MM-DD'));
+    } else {
+      todayCourses[course._id] = [moment().format('YYYY-MM-DD')];
+    }
+
+    localStorage.setItem('todayCourses', JSON.stringify(todayCourses));
+
+    this.courseService.getCourses().subscribe((courses: Course[]) => {
+      this.store.dispatch(setCourses({ courses }));
+    });
+  }
+
   trackByMethod(index: number, el: Course): string {
     return el._id;
   }

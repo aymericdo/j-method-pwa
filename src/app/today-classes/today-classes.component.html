@@ -1,7 +1,13 @@
 <ng-container *ngIf="(list$ | async)?.length; else empty">
   <mat-nav-list #courses (selectionChange)="onSelection($event, courses)">
     <a mat-list-item *ngFor="let course of (list$ | async); trackBy: trackByMethod"
-      [routerLink]="['/detail-class', course._id]">{{course.name}}</a>
+      [routerLink]="['/detail-class', course._id]">
+      {{course.name}}
+      <button mat-icon-button aria-label="Delete courses button"
+        (click)="deleteCourse(course, $event)">
+        <mat-icon>remove_circle_outline</mat-icon>
+      </button>
+    </a>
   </mat-nav-list>
 </ng-container>
 <ng-template #empty>

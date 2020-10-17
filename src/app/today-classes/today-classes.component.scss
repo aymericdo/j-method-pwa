@@ -15,4 +15,9 @@
     text-align: center;
     color: white;
   }
+
+  mat-nav-list > a button {
+    position: absolute;
+    right: 1em;
+  }
 }
