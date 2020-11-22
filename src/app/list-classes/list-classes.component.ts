@@ -4,15 +4,17 @@ import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angula
 import { CourseService } from '../course.service';
 import { forkJoin, Observable } from 'rxjs';
 import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialog/confirmation-signout-dialog.component';
+import { RushDialogComponent } from './rush-dialog/rush-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
-import { setNotifications, setCourses, setSelectedCourses } from '../store/current-session.actions';
+import { setNotifications, setCourses, setSelectedCourses, setRush } from '../store/current-session.actions';
 import { take } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
+import { RushService } from '../rush.service';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -33,6 +35,12 @@ export interface Notification {
   isOnPauseSince: string;
 }
 
+export interface Rush {
+  ids?: string[];
+  startDate: string;
+  endDate: string;
+}
+
 @Component({
   selector: 'app-list-classes',
   templateUrl: './list-classes.component.html',
@@ -42,6 +50,8 @@ export class ListClassesComponent implements OnInit {
   list$: Observable<Course[]>;
   selected$: Observable<Course[]>;
   notifications$: Observable<Notification[]>;
+  rush$: Observable<Rush>;
+  deletingRush = false;
 
   fabButtons = [{
     id: 0,
@@ -49,12 +59,16 @@ export class ListClassesComponent implements OnInit {
   }, {
     id: 1,
     icon: 'hourglass_bottom',
+  }, {
+    id: 2,
+    icon: 'shutter_speed',
   }];
 
   constructor(
     private dialog: MatDialog,
     private courseService: CourseService,
     private notificationService: NotificationService,
+    private rushService: RushService,
     private router: Router,
     private store: Store<AppState>,
   ) { }
@@ -68,12 +82,17 @@ export class ListClassesComponent implements OnInit {
       this.store.dispatch(setCourses({ courses }));
     });
 
+    this.rushService.getRush().subscribe((rush: Rush) => {
+      this.store.dispatch(setRush({ rush }));
+    });
+
     this.list$ = this.store.pipe(select(selectCourses));
     this.notifications$ = this.store.pipe(select(selectNotifications));
     this.selected$ = this.store.pipe(select(selectSelectedCourses));
+    this.rush$ = this.store.pipe(select(selectRush));
   }
 
-  openDialog(dialog: 'scheduler' | 'signout'): void {
+  openDialog(dialog: 'scheduler' | 'signout' | 'rush'): void {
     if (dialog === 'scheduler') {
       let selected = [];
       this.store.pipe(select(selectSelectedCourses), take(1)).subscribe((sltd => selected = sltd));
@@ -91,6 +110,8 @@ export class ListClassesComponent implements OnInit {
           });
         }
       });
+    } else if (dialog === 'rush') {
+      this.dialog.open(RushDialogComponent);
     } else {
       this.dialog.open(ConfirmationSignoutDialogComponent);
     }
@@ -104,7 +125,7 @@ export class ListClassesComponent implements OnInit {
 
   isSelected(course: Course): boolean {
     let selected = [];
-    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(sltd => selected = sltd);
+    this.selected$.pipe(take(1)).subscribe(sltd => selected = sltd);
     return selected && selected.some(s => s._id === course._id);
   }
 
@@ -127,35 +148,54 @@ export class ListClassesComponent implements OnInit {
 
   removeCourses(): void {
     let selected = [];
-    this.store.pipe(select(selectSelectedCourses), take(1)).subscribe(sltd => selected = sltd);
+    this.selected$.pipe(take(1)).subscribe(sltd => selected = sltd);
 
-    const deleteSelectedCourses$ = selected.map((s) => {
-      return this.courseService.deleteCourse(s);
-    });
+    const googleCalendarCourses = selected.map(s => s.ids).filter(Boolean);
 
-    forkJoin(deleteSelectedCourses$).subscribe(() => {
+    if (googleCalendarCourses.length) {
       const batch = gapi.client.newBatch();
 
-      const googleCalendarCourses = selected.map(s => s.ids).filter(Boolean);
-
-      if (googleCalendarCourses.length) {
-        googleCalendarCourses.forEach((ids) => {
-          ids.forEach((id: string) => {
-            batch.add(gapi.client.calendar.events.delete({
-              calendarId: 'primary',
-              eventId: id,
-            }));
-          });
+      googleCalendarCourses.forEach((ids) => {
+        ids.forEach((id: string) => {
+          batch.add(gapi.client.calendar.events.delete({
+            calendarId: 'primary',
+            eventId: id,
+          }));
         });
+      });
 
-        batch.then((event) => {
-          console.log('all events now dynamically delete!!!');
-          console.log(event);
-          this.handleSuccess();
-        });
-      } else {
-        this.handleSuccess();
-      }
+      batch.then((event) => {
+        console.log('all events now dynamically delete!!!');
+        console.log(event);
+        this.handleSuccess(selected);
+      });
+    } else {
+      this.handleSuccess(selected);
+    }
+  }
+
+  deleteRush(): void {
+    this.deletingRush = true;
+    let rush = null;
+    this.rush$.pipe(take(1)).subscribe(r => rush = r);
+
+    const batch = gapi.client.newBatch();
+
+    rush.ids.forEach((id: string) => {
+      batch.add(gapi.client.calendar.events.delete({
+        calendarId: 'primary',
+        eventId: id,
+      }));
+    });
+
+    batch.then((event) => {
+      console.log('all events now dynamically delete!!!');
+      console.log(event);
+
+      this.rushService.deleteRush().subscribe(() => {
+        this.deletingRush = false;
+        this.store.dispatch(setRush({ rush: null }));
+      });
     });
   }
 
@@ -170,18 +210,29 @@ export class ListClassesComponent implements OnInit {
         this.router.navigate(['today-classes']);
         break;
       }
+
+      case 2: {
+        this.openDialog('rush');
+        break;
+      }
     }
   }
 
-  private handleSuccess(): void {
-    let list = [];
-    this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
+  private handleSuccess(selected: Course[]): void {
+    const deleteSelectedCourses$ = selected.map((s) => {
+      return this.courseService.deleteCourse(s);
+    });
 
-    const newList = list.filter((c: Course) => !this.isSelected(c));
-    this.unselectAll();
-    this.store.dispatch(setCourses({
-      courses: newList,
-    }));
+    forkJoin(deleteSelectedCourses$).subscribe(() => {
+      let list = [];
+      this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
+
+      const newList = list.filter((c: Course) => !this.isSelected(c));
+      this.unselectAll();
+      this.store.dispatch(setCourses({
+        courses: newList,
+      }));
+    });
   }
 
   trackByMethod(index: number, el: Course): string {

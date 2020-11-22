@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Course } from './list-classes/list-classes.component';
+import { Course, Rush } from './list-classes/list-classes.component';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

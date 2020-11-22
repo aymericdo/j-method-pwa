@@ -6,7 +6,7 @@
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
-    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v1.1.3)'"></span>
+    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v1.1.5)'"></span>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
@@ -60,6 +60,16 @@
   routerLink="/daily-schedule"
 >
   <mat-icon>alarm_add</mat-icon>
+</button>
+<button
+  *ngIf="(rush$ | async)"
+  mat-flat-button color="primary" class="fab-btn-rush -blinking"
+  aria-label="Cancel rush"
+  matBadge="x" matBadgeOverlap="true" matBadgeColor="accent"
+  [disabled]="deletingRush"
+  (click)="deleteRush()"
+>
+  <mat-icon>shutter_speed</mat-icon>
 </button>
 <app-speed-dial-fab
   *ngIf="!(selected$ | async)?.length"

@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .progress-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .block {
+    flex: 1;
+  }
+}

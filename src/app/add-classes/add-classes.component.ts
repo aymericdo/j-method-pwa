@@ -91,6 +91,21 @@ export class AddClassesComponent {
         this.store.dispatch(addCourse({ course: newCourse }));
         this.submitting = false;
         this.zone.run(() => this.router.navigate(['/home']));
+      }, () => {
+        const batch = gapi.client.newBatch();
+
+        ids.forEach((id: string) => {
+          batch.add(gapi.client.calendar.events.delete({
+            calendarId: 'primary',
+            eventId: id,
+          }));
+        });
+
+        batch.then((event) => {
+          console.log('all events now dynamically delete!!!');
+          console.log(event);
+          this.submitting = false;
+        });
       });
   }
 }

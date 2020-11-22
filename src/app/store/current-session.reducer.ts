@@ -1,6 +1,6 @@
 import { Action, createReducer, on, createSelector } from '@ngrx/store';
 import * as AppActions from './current-session.actions';
-import { Course, Notification } from '../list-classes/list-classes.component';
+import { Course, Notification, Rush } from '../list-classes/list-classes.component';
 import { AppState } from '.';
 import * as moment from 'moment';
 
@@ -8,17 +8,20 @@ export interface CurrentSessionState {
   courses: Course[];
   selectedCourses: Course[];
   notifications: Notification[];
+  rush: Rush;
 }
 
 export const initialState: CurrentSessionState = {
   courses: [],
   selectedCourses: [],
   notifications: [],
+  rush: null,
 };
 
 const currentSessionReducer = createReducer(
   initialState,
   on(AppActions.addCourse, (state, { course }) => ({ ...state, courses: [...state.courses, course] })),
+  on(AppActions.setRush, (state, { rush }) => ({ ...state, rush })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),
@@ -60,6 +63,10 @@ export const selectTodayCourses = createSelector(
 export const selectNotifications = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.notifications,
+);
+export const selectRush = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.rush,
 );
 export const selectSelectedCourses = createSelector(
   selectCurrentSession,

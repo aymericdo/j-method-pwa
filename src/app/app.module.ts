@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatBadgeModule } from '@angular/material/badge';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -17,6 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListClassesComponent } from './list-classes/list-classes.component';
 import { HoursSelectorDialogComponent } from './list-classes/hours-selector-dialog/hours-selector-dialog.component';
+import { RushDialogComponent } from './list-classes/rush-dialog/rush-dialog.component';
 import { ConfirmationSignoutDialogComponent } from './list-classes/confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { DaySchedulerDialogComponent } from './list-classes/day-scheduler-dialog/day-scheduler-dialog.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -28,13 +30,16 @@ import { SpeedDialFabComponent } from './shared/speed-dial-fab/speed-dial-fab.co
 import { ScrollableDirective } from './shared/scroll-to/scrollable.directive';
 import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
 import { EmailInterceptor } from './email-interceptor';
+import { APP_DATE_FORMATS, MyDateAdapter } from './my-date-adapter';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { metaReducers, reducers } from './store';
 import { TodayClassesComponent } from './today-classes/today-classes.component';
 import { DescriptionClassComponent } from './description-class/description-class.component';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -44,6 +49,7 @@ import { DescriptionClassComponent } from './description-class/description-class
     ConfirmationSignoutDialogComponent,
     DaySchedulerDialogComponent,
     HoursSelectorDialogComponent,
+    RushDialogComponent,
     InfiniteScrollComponent,
     SpeedDialFabComponent,
     ScrollableDirective,
@@ -56,12 +62,15 @@ import { DescriptionClassComponent } from './description-class/description-class
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    MatBadgeModule,
     FormsModule,
     HttpClientModule,
     MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -88,7 +97,9 @@ import { DescriptionClassComponent } from './description-class/description-class
       provide: HTTP_INTERCEPTORS,
       useClass: EmailInterceptor,
       multi: true
-    }
+    },
+    { provide: DateAdapter, useClass: MyDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Les dates de ton rush please ?</h2>
+<div *ngIf="!submitting" mat-dialog-content class="content">
+  <mat-form-field appearance="fill">
+    <mat-label>Début du rush</mat-label>
+    <input matInput [(ngModel)]="startDate" [matDatepicker]="startPicker">
+    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+    <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Concours</mat-label>
+    <input matInput [(ngModel)]="endDate" [matDatepicker]="endPicker">
+    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+    <mat-datepicker #endPicker></mat-datepicker>
+  </mat-form-field>
+</div>
+<div *ngIf="submitting" class="progress-spinner">
+  <mat-progress-spinner
+  color="primary"
+  mode="indeterminate">
+</mat-progress-spinner>
+</div>
+<div class="block"></div>
+<div *ngIf="!submitting" mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annuler</button>
+  <button mat-button (click)="handleClick()">Go!</button>
+</div>

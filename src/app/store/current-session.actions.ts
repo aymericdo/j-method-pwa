@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Course, Notification } from '../list-classes/list-classes.component';
+import { Course, Notification, Rush } from '../list-classes/list-classes.component';
 
 export const setCourses = createAction(
   '[App] Set courses',
@@ -9,6 +9,11 @@ export const setCourses = createAction(
 export const addCourse = createAction(
   '[App] Add course',
   props<{ course: Course }>()
+);
+
+export const setRush = createAction(
+  '[App] Set rush',
+  props<{ rush: Rush }>()
 );
 
 export const shiftNotification = createAction(

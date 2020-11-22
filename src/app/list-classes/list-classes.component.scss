@@ -36,6 +36,13 @@
     bottom: 6.125em;
   }
 
+  .fab-btn-rush {
+    position: fixed;
+    bottom: 1em;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .-blinking {
     animation: blinkingBackground 1s infinite;
   }
