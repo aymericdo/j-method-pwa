@@ -75,16 +75,16 @@ export class RushDialogComponent implements OnInit {
           start.add(2, 'hours');
         }
 
-        if (start.hours() === 19 && start.minutes() === 0) {
+        if (start.hours() === 18 && start.minutes() === 0) {
           start.add(1, 'day').set({ hour: 8, minute: 0, second: 0 });
         }
+
+        events.push(res);
 
         if (start.isAfter(momentEndDate)) {
           stillHaveTime = false;
           return null;
         }
-
-        events.push(res);
       });
     }
 
