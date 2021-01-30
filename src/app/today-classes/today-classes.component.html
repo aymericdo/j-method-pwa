@@ -1,3 +1,10 @@
+<button
+  mat-icon-button color="primary" class="fab-btn-back-button"
+  aria-label="Home button"
+  routerLink="/home"
+>
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
 <ng-container *ngIf="(list$ | async)?.length; else empty">
   <mat-nav-list #courses (selectionChange)="onSelection($event, courses)">
     <a mat-list-item *ngFor="let course of (list$ | async); trackBy: trackByMethod"
