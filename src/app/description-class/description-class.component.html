@@ -1,3 +1,10 @@
+<button
+  mat-icon-button color="primary" class="fab-btn-back-button"
+  aria-label="Home button"
+  routerLink="/home"
+>
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
 <div>
   <span>Nom</span>
   <h1 [innerHTML]="(selectedCourse$ | async)?.name"></h1>

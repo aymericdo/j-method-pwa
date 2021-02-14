@@ -2,19 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { CourseService } from '../course.service';
-import { forkJoin, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
 import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { RushDialogComponent } from './rush-dialog/rush-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses, selectRush } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
-import { setNotifications, setCourses, setSelectedCourses, setRush } from '../store/current-session.actions';
-import { take } from 'rxjs/operators';
+import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting } from '../store/current-session.actions';
+import { take, takeUntil } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
 import { RushService } from '../rush.service';
+import { ConfirmationDeletionDialogComponent } from './confirmation-deletion-dialog/confirmation-deletion-dialog.component';
+import { SettingService } from '../setting.service';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -25,6 +27,8 @@ export interface Course {
   difficulties: Difficulties;
   date: string;
   ids?: string[];
+  sendToGoogleCalendar?: boolean;
+  reminders: string[];
 }
 
 export interface Notification {
@@ -51,23 +55,35 @@ export class ListClassesComponent implements OnInit {
   selected$: Observable<Course[]>;
   notifications$: Observable<Notification[]>;
   rush$: Observable<Rush>;
+  selectLoadingRush$: Observable<boolean>;
+  selectLoadingSetting$: Observable<boolean>;
   deletingRush = false;
+  fetching = true;
 
   fabButtons = [{
     id: 0,
+    name: 'add',
     icon: 'add',
+    disabled: false,
   }, {
     id: 1,
-    icon: 'hourglass_bottom',
+    name: 'today',
+    icon: 'today',
+    disabled: false,
   }, {
     id: 2,
+    name: 'rush',
     icon: 'shutter_speed',
+    disabled: false,
   }];
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(
     private dialog: MatDialog,
     private courseService: CourseService,
     private notificationService: NotificationService,
+    private settingService: SettingService,
     private rushService: RushService,
     private router: Router,
     private store: Store<AppState>,
@@ -79,20 +95,41 @@ export class ListClassesComponent implements OnInit {
     });
 
     this.courseService.getCourses().subscribe((courses: Course[]) => {
+      this.fetching = false;
       this.store.dispatch(setCourses({ courses }));
     });
 
-    this.rushService.getRush().subscribe((rush: Rush) => {
+    this.rushService.getRush().subscribe(({ rush, isLoadingRush }) => {
+      this.store.dispatch(setLoadingRush({ loadingRush: isLoadingRush }));
       this.store.dispatch(setRush({ rush }));
     });
+
+    this.settingService.getSettings()
+      .subscribe(({ isLoadingSetting }) => {
+        this.store.dispatch(setLoadingSetting({ loadingSetting: isLoadingSetting }));
+      });
 
     this.list$ = this.store.pipe(select(selectCourses));
     this.notifications$ = this.store.pipe(select(selectNotifications));
     this.selected$ = this.store.pipe(select(selectSelectedCourses));
     this.rush$ = this.store.pipe(select(selectRush));
+    this.selectLoadingRush$ = this.store.pipe(select(selectLoadingRush));
+    this.selectLoadingSetting$ = this.store.pipe(select(selectLoadingSetting));
+
+    combineLatest([this.rush$, this.selectLoadingRush$])
+      .pipe(
+        takeUntil(this.destroyed$),
+    ).subscribe(([rush, loading]) => {
+      this.fabButtons = this.fabButtons.map((btn) => btn.name === 'rush' ? { ...btn, disabled: !!rush || loading } : { ...btn })
+    });
   }
 
-  openDialog(dialog: 'scheduler' | 'signout' | 'rush'): void {
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
+  openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse'): void {
     if (dialog === 'scheduler') {
       let selected = [];
       this.store.pipe(select(selectSelectedCourses), take(1)).subscribe((sltd => selected = sltd));
@@ -112,6 +149,30 @@ export class ListClassesComponent implements OnInit {
       });
     } else if (dialog === 'rush') {
       this.dialog.open(RushDialogComponent);
+    } else if (dialog === 'deleteRush') {
+      const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
+        data: {
+          title: 'Voulez-vous vraiment supprimer le rush ?',
+        },
+      });
+
+      daySchedulerDialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.deleteRush()
+        }
+      });
+    } else if (dialog === 'deleteCourse') {
+      const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
+        data: {
+          title: 'Voulez-vous vraiment supprimer le cours ?',
+        },
+      });
+
+      daySchedulerDialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.removeCourses()
+        }
+      });
     } else {
       this.dialog.open(ConfirmationSignoutDialogComponent);
     }
@@ -130,16 +191,9 @@ export class ListClassesComponent implements OnInit {
   }
 
   isADayRevision(course: Course): boolean {
-    const reminders: string[] = [];
-    reminders.push(moment(course.date).add(1, 'day').format('YYYY-MM-DD'));
-    if (course.difficulties === 'tough') {
-      reminders.push(moment(course.date).add(2, 'day').format('YYYY-MM-DD'));
-    }
-    reminders.push(moment(course.date).add(5, 'day').format('YYYY-MM-DD'));
-    reminders.push(moment(course.date).add(15, 'day').format('YYYY-MM-DD'));
-    reminders.push(moment(course.date).add(30, 'day').format('YYYY-MM-DD'));
-
-    return reminders.includes(moment().format('YYYY-MM-DD'));
+    return course.reminders.map(r => (
+      moment(r).format('YYYY-MM-DD')
+    )).includes(moment().format('YYYY-MM-DD'));
   }
 
   unselectAll(): void {
@@ -150,52 +204,27 @@ export class ListClassesComponent implements OnInit {
     let selected = [];
     this.selected$.pipe(take(1)).subscribe(sltd => selected = sltd);
 
-    const googleCalendarCourses = selected.map(s => s.ids).filter(Boolean);
+    const deleteSelectedCourses$ = selected.map((s) => {
+      return this.courseService.deleteCourse(s);
+    });
 
-    if (googleCalendarCourses.length) {
-      const batch = gapi.client.newBatch();
+    forkJoin(deleteSelectedCourses$).subscribe(() => {
+      let list = [];
+      this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
 
-      googleCalendarCourses.forEach((ids) => {
-        ids.forEach((id: string) => {
-          batch.add(gapi.client.calendar.events.delete({
-            calendarId: 'primary',
-            eventId: id,
-          }));
-        });
-      });
-
-      batch.then((event) => {
-        console.log('all events now dynamically delete!!!');
-        console.log(event);
-        this.handleSuccess(selected);
-      });
-    } else {
-      this.handleSuccess(selected);
-    }
+      const newList = list.filter((c: Course) => !this.isSelected(c));
+      this.unselectAll();
+      this.store.dispatch(setCourses({
+        courses: newList,
+      }));
+    });
   }
 
   deleteRush(): void {
     this.deletingRush = true;
-    let rush = null;
-    this.rush$.pipe(take(1)).subscribe(r => rush = r);
-
-    const batch = gapi.client.newBatch();
-
-    rush.ids.forEach((id: string) => {
-      batch.add(gapi.client.calendar.events.delete({
-        calendarId: 'primary',
-        eventId: id,
-      }));
-    });
-
-    batch.then((event) => {
-      console.log('all events now dynamically delete!!!');
-      console.log(event);
-
-      this.rushService.deleteRush().subscribe(() => {
-        this.deletingRush = false;
-        this.store.dispatch(setRush({ rush: null }));
-      });
+    this.rushService.deleteRush().subscribe(() => {
+      this.deletingRush = false;
+      this.store.dispatch(setLoadingRush({ loadingRush: true }));
     });
   }
 
@@ -216,23 +245,6 @@ export class ListClassesComponent implements OnInit {
         break;
       }
     }
-  }
-
-  private handleSuccess(selected: Course[]): void {
-    const deleteSelectedCourses$ = selected.map((s) => {
-      return this.courseService.deleteCourse(s);
-    });
-
-    forkJoin(deleteSelectedCourses$).subscribe(() => {
-      let list = [];
-      this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
-
-      const newList = list.filter((c: Course) => !this.isSelected(c));
-      this.unselectAll();
-      this.store.dispatch(setCourses({
-        courses: newList,
-      }));
-    });
   }
 
   trackByMethod(index: number, el: Course): string {

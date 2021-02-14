@@ -3,29 +3,44 @@ import * as AppActions from './current-session.actions';
 import { Course, Notification, Rush } from '../list-classes/list-classes.component';
 import { AppState } from '.';
 import * as moment from 'moment';
+import { Settings } from '../settings/settings.component';
 
 export interface CurrentSessionState {
   courses: Course[];
   selectedCourses: Course[];
+  todayCourses: Course[];
   notifications: Notification[];
   rush: Rush;
+  loadingRush: boolean;
+  loadingSetting: boolean;
+  settings: Settings;
 }
 
 export const initialState: CurrentSessionState = {
   courses: [],
   selectedCourses: [],
+  todayCourses: [],
   notifications: [],
   rush: null,
+  loadingRush: false,
+  loadingSetting: false,
+  settings: {
+    maxCoursesNumber: null,
+  },
 };
 
 const currentSessionReducer = createReducer(
   initialState,
   on(AppActions.addCourse, (state, { course }) => ({ ...state, courses: [...state.courses, course] })),
   on(AppActions.setRush, (state, { rush }) => ({ ...state, rush })),
+  on(AppActions.setLoadingRush, (state, { loadingRush }) => ({ ...state, loadingRush })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),
   on(AppActions.shiftNotification, (state)  => ({ ...state, notifications: state.notifications.slice(1) })),
+  on(AppActions.setSettings, (state, { settings })  => ({ ...state, settings })),
+  on(AppActions.setLoadingSetting, (state, { loadingSetting }) => ({ ...state, loadingSetting })),
+  on(AppActions.setTodayCourses, (state, { todayCourses })  => ({ ...state, todayCourses })),
 );
 
 export function reducer(state: CurrentSessionState | undefined, action: Action) {
@@ -40,25 +55,15 @@ export const selectCourses = createSelector(
 );
 export const selectTodayCourses = createSelector(
   selectCurrentSession,
-  (state: CurrentSessionState) => {
-    return state.courses.filter(course => {
-      const todayCourses = JSON.parse(localStorage.getItem('todayCourses')) || {};
-      if (todayCourses[course._id] && todayCourses[course._id].some((date: string) => date === moment().format('YYYY-MM-DD'))) {
-        return false;
-      }
-
-      const reminders: string[] = [];
-      reminders.push(moment(course.date).add(1, 'day').format('YYYY-MM-DD'));
-      if (course.difficulties === 'tough') {
-        reminders.push(moment(course.date).add(2, 'day').format('YYYY-MM-DD'));
-      }
-      reminders.push(moment(course.date).add(5, 'day').format('YYYY-MM-DD'));
-      reminders.push(moment(course.date).add(15, 'day').format('YYYY-MM-DD'));
-      reminders.push(moment(course.date).add(30, 'day').format('YYYY-MM-DD'));
-
-      return reminders.includes(moment().format('YYYY-MM-DD'));
-    });
-  }
+  (state: CurrentSessionState) => state.todayCourses,
+);
+export const selectSettings = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.settings,
+);
+export const selectLoadingSetting = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.loadingSetting,
 );
 export const selectNotifications = createSelector(
   selectCurrentSession,
@@ -68,14 +73,18 @@ export const selectRush = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.rush,
 );
+export const selectLoadingRush = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.loadingRush,
+);
 export const selectSelectedCourses = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.selectedCourses,
-);
-export const selectIsOnPause = createSelector(
-  selectCurrentSession,
-  (state: CurrentSessionState) => !!state.notifications[0].isOnPauseSince,
-);
+  );
+  export const selectIsOnPause = createSelector(
+    selectCurrentSession,
+    (state: CurrentSessionState) => !!state.notifications[0].isOnPauseSince,
+    );
 export const selectOpenedCourse = (id: string) => createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.courses.find(c => c._id === id),

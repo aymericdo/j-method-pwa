@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Course, Notification, Rush } from '../list-classes/list-classes.component';
+import { Settings } from '../settings/settings.component';
 
 export const setCourses = createAction(
   '[App] Set courses',
@@ -16,6 +17,11 @@ export const setRush = createAction(
   props<{ rush: Rush }>()
 );
 
+export const setLoadingRush = createAction(
+  '[App] Set loading rush',
+  props<{ loadingRush: boolean }>()
+);
+
 export const shiftNotification = createAction(
   '[App] Shift notifications',
 );
@@ -28,4 +34,19 @@ export const setNotifications = createAction(
 export const setSelectedCourses = createAction(
   '[App] Set selected courses',
   props<{ selectedCourses: Course[] }>()
+);
+
+export const setTodayCourses = createAction(
+  '[App] Set today courses',
+  props<{ todayCourses: Course[] }>()
+);
+
+export const setSettings = createAction(
+  '[App] Set settings',
+  props<{ settings: Settings }>()
+);
+
+export const setLoadingSetting = createAction(
+  '[App] Set loading setting',
+  props<{ loadingSetting: boolean }>()
 );

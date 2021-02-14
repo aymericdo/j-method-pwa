@@ -10,37 +10,9 @@
   <meta name="theme-color" content="#1976d2">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/calendar">
-  <meta name="google-signin-client_id" content="45920931433-5dfkl5buka7j8ir93vs9r5entm8v5n8o.apps.googleusercontent.com">
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
 <body class="mat-typography">
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
-  <div id="googleBtn" class="g-signin2" data-onsuccess="onSignIn"></div>
-  <script type="text/javascript">
-    function onSignIn(googleUser) {
-      const profile = googleUser.getBasicProfile();
-
-      localStorage.setItem('token', googleUser.getAuthResponse().id_token);
-      localStorage.setItem('email', profile.getEmail());
-
-      gapi.load('client:auth2', () => {
-        gapi.client.load('calendar', 'v3', () => {
-          document.getElementById('googleBtn').style.display = 'none';
-
-          const event = new Event("signedin");
-          document.dispatchEvent(event);
-        });
-      });
-    }
-
-    document.addEventListener('signout', () => {
-      localStorage.clear();
-      document.getElementById('googleBtn').style.display = 'block';
-    });
-  </script>
 </body>
 </html>

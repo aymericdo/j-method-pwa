@@ -16,8 +16,13 @@
     color: white;
   }
 
-  mat-nav-list > a button {
+  .delete-button {
     position: absolute;
     right: 1em;
+    color: #c2185b;
+
+    &:hover {
+      color: white;
+    }
   }
 }

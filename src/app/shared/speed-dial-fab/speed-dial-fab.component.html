@@ -14,6 +14,7 @@
       class="fab-secondary"
       color="secondary"
       (click)="redirect.emit(btn.id)"
+      [disabled]="btn.disabled"
     >
       <i class="material-icons">{{btn.icon}}</i>
     </button>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ export class ConfirmationSignoutDialogComponent {
    *  Sign out the user upon button click.
    */
   handleSignoutClick(): void {
-    gapi.auth2.getAuthInstance().signOut();
+    localStorage.clear();
     this.router.navigateByUrl('/');
   }
 }

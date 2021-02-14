@@ -10,8 +10,8 @@
     <a mat-list-item *ngFor="let course of (list$ | async); trackBy: trackByMethod"
       [routerLink]="['/detail-class', course._id]">
       {{course.name}}
-      <button mat-icon-button aria-label="Delete courses button"
-        (click)="deleteCourse(course, $event)">
+      <button class="delete-button" mat-icon-button aria-label="Delete courses button"
+        (click)="openDialog($event, 'deleteCourse', course)">
         <mat-icon>remove_circle_outline</mat-icon>
       </button>
     </a>
@@ -20,6 +20,6 @@
 <ng-template #empty>
   <div class="empty-section">
     <img class="illustration" src="assets/no-data.svg" />
-    <h3>Pas encore de cours enregistré</h3>
+    <h3>Pas encore de cours à reviser</h3>
   </div>
 </ng-template>

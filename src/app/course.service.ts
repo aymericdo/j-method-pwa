@@ -25,4 +25,12 @@ export class CourseService {
   deleteCourse(course: Course): Observable<boolean> {
     return this.httpClient.delete<boolean>(`${this.server}/api/courses/${course._id}`);
   }
+
+  getTodayClasses(): Observable<Course[]> {
+    return this.httpClient.get<Course[]>(`${this.server}/api/today-classes`);
+  }
+
+  postTodayClasses(course: { course: Course }): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.server}/api/today-classes`, course);
+  }
 }

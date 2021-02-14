@@ -6,12 +6,12 @@
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
-    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v1.1.6)'"></span>
+    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.0.0)'"></span>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
       mat-icon-button aria-label="Remove courses button"
-      (click)="removeCourses()">
+      (click)="openDialog('deleteCourse')">
       <mat-icon>delete</mat-icon>
     </button>
 
@@ -28,6 +28,13 @@
     </button>
 
     <button *ngIf="!(selected$ | async)?.length"
+      [disabled]="(selectLoadingSetting$ | async)"
+      mat-icon-button aria-label="icon-button with settings icon"
+      routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <button *ngIf="!(selected$ | async)?.length"
       mat-icon-button aria-label="icon-button with more_vert icon"
       [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
@@ -38,21 +45,29 @@
     </mat-menu>
   </mat-toolbar>
 </p>
-<ng-container *ngIf="(list$ | async)?.length; else empty">
-  <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
-    <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
-      [value]="course" [selected]="isSelected(course)">
-      {{course.name}}
-      <span class="revision-day" *ngIf="isADayRevision(course)">Cours à réviser aujourd'hui !</span>
-    </mat-list-option>
-  </mat-selection-list>
+<div *ngIf="fetching" class="progress-spinner">
+  <mat-progress-spinner
+    color="primary"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+<ng-container *ngIf="!fetching">
+  <ng-container *ngIf="(list$ | async)?.length; else empty">
+    <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
+      <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
+        [value]="course" [selected]="isSelected(course)">
+        {{course.name}}
+        <span class="revision-day" *ngIf="isADayRevision(course)">Cours à réviser aujourd'hui !</span>
+      </mat-list-option>
+    </mat-selection-list>
+  </ng-container>
+  <ng-template #empty>
+    <div class="empty-section">
+      <img class="illustration" src="assets/no-data.svg" />
+      <h3>Pas encore de cours enregistré</h3>
+    </div>
+  </ng-template>
 </ng-container>
-<ng-template #empty>
-  <div class="empty-section">
-    <img class="illustration" src="assets/no-data.svg" />
-    <h3>Pas encore de cours enregistré</h3>
-  </div>
-</ng-template>
 <button
   *ngIf="(notifications$ | async)?.length"
   mat-mini-fab color="primary" class="fab-btn-daily-schedule -blinking"
@@ -62,12 +77,12 @@
   <mat-icon>alarm_add</mat-icon>
 </button>
 <button
-  *ngIf="(rush$ | async)"
+  *ngIf="(rush$ | async) && !(selectLoadingRush$ | async)"
   mat-flat-button color="primary" class="fab-btn-rush -blinking"
   aria-label="Cancel rush"
   matBadge="x" matBadgeOverlap="true" matBadgeColor="accent"
   [disabled]="deletingRush"
-  (click)="deleteRush()"
+  (click)="openDialog('deleteRush')"
 >
   <mat-icon>shutter_speed</mat-icon>
 </button>

@@ -29,7 +29,7 @@ import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scrol
 import { SpeedDialFabComponent } from './shared/speed-dial-fab/speed-dial-fab.component';
 import { ScrollableDirective } from './shared/scroll-to/scrollable.directive';
 import { OffsetTopDirective } from './shared/scroll-to/offset-top.directive';
-import { EmailInterceptor } from './email-interceptor';
+import { TokenInterceptor } from './token-interceptor';
 import { APP_DATE_FORMATS, MyDateAdapter } from './my-date-adapter';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
@@ -40,23 +40,29 @@ import { metaReducers, reducers } from './store';
 import { TodayClassesComponent } from './today-classes/today-classes.component';
 import { DescriptionClassComponent } from './description-class/description-class.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
+import { SettingsComponent } from './settings/settings.component';
+import { LoginComponent } from './login/login.component';
+import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation-deletion-dialog/confirmation-deletion-dialog.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
     AddClassesComponent,
-    ListClassesComponent,
+    AppComponent,
     ConfirmationSignoutDialogComponent,
-    DaySchedulerDialogComponent,
-    HoursSelectorDialogComponent,
-    RushDialogComponent,
-    InfiniteScrollComponent,
-    SpeedDialFabComponent,
-    ScrollableDirective,
-    OffsetTopDirective,
     DailyScheduleComponent,
-    TodayClassesComponent,
+    DaySchedulerDialogComponent,
+    ConfirmationDeletionDialogComponent,
     DescriptionClassComponent,
+    HoursSelectorDialogComponent,
+    InfiniteScrollComponent,
+    ListClassesComponent,
+    LoginComponent,
+    OffsetTopDirective,
+    RushDialogComponent,
+    ScrollableDirective,
+    SettingsComponent,
+    SpeedDialFabComponent,
+    TodayClassesComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -95,7 +101,7 @@ import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/mat
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: EmailInterceptor,
+      useClass: TokenInterceptor,
       multi: true
     },
     { provide: DateAdapter, useClass: MyDateAdapter },

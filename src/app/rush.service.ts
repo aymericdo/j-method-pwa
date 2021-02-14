@@ -14,12 +14,12 @@ export class RushService {
     private httpClient: HttpClient,
   ) { }
 
-  addRush(rush: Rush): Observable<Rush> {
-    return this.httpClient.post<Rush>(`${this.server}/api/rush`, rush);
+  addRush(startDate: Date, endDate: Date): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.server}/api/rush`, { startDate, endDate });
   }
 
-  getRush(): Observable<Rush> {
-    return this.httpClient.get<Rush>(`${this.server}/api/rush`);
+  getRush(): Observable<{ rush: Rush, isLoadingRush: boolean }> {
+    return this.httpClient.get<{ rush: Rush, isLoadingRush: boolean }>(`${this.server}/api/rush`);
   }
 
   deleteRush(): Observable<boolean> {

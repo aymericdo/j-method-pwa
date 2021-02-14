@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  color: white;
+  padding: 1em;
+
+  .section-row {
+    padding: 0.875em;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .progress-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  mat-form-field.full-width {
+    width: 100%;
+  }
+ .submit-button {
+    min-width: unset;
+  }
+}

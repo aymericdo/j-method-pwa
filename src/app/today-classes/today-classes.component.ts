@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { CourseService } from '../course.service';
+import { ConfirmationDeletionDialogComponent } from '../list-classes/confirmation-deletion-dialog/confirmation-deletion-dialog.component';
 import { Course } from '../list-classes/list-classes.component';
 import { AppState } from '../store';
-import { setCourses } from '../store/current-session.actions';
+import { setTodayCourses } from '../store/current-session.actions';
 import { selectTodayCourses } from '../store/current-session.reducer';
 
 @Component({
@@ -17,37 +19,50 @@ export class TodayClassesComponent implements OnInit {
   list$: Observable<Course[]>;
 
   constructor(
+    private dialog: MatDialog,
     private courseService: CourseService,
     private store: Store<AppState>,
   ) { }
 
   ngOnInit(): void {
-    this.courseService.getCourses().subscribe((courses: Course[]) => {
-      this.store.dispatch(setCourses({ courses }));
-    });
-
+    this.fetchData()
     this.list$ = this.store.pipe(select(selectTodayCourses));
   }
 
-  deleteCourse(course: Course, $event: Event): void {
-    $event.stopPropagation();
-    $event.preventDefault();
-    const todayCourses = JSON.parse(localStorage.getItem('todayCourses')) || {};
-
-    if (todayCourses[course._id] && todayCourses[course._id].length) {
-      todayCourses[course._id].push(moment().format('YYYY-MM-DD'));
-    } else {
-      todayCourses[course._id] = [moment().format('YYYY-MM-DD')];
-    }
-
-    localStorage.setItem('todayCourses', JSON.stringify(todayCourses));
-
-    this.courseService.getCourses().subscribe((courses: Course[]) => {
-      this.store.dispatch(setCourses({ courses }));
-    });
+  deleteCourse(course: Course): void {
+    this.courseService.postTodayClasses({ course })
+      .subscribe(() => {
+        this.fetchData();
+      })
   }
 
   trackByMethod(index: number, el: Course): string {
     return el._id;
+  }
+
+  openDialog($event: Event, dialog: 'deleteCourse', course: Course): void {
+    $event.stopPropagation();
+    $event.preventDefault();
+
+    if (dialog === 'deleteCourse') {
+      const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
+        data: {
+          title: 'Avez-vous révisé ce cours ?',
+        },
+      });
+
+      daySchedulerDialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.deleteCourse(course)
+        }
+      });
+    }
+  }
+
+  private fetchData() {
+    this.courseService.getTodayClasses()
+      .subscribe((todayCourses) => {
+        this.store.dispatch(setTodayCourses({ todayCourses }));
+      });
   }
 }

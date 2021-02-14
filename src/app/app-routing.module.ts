@@ -6,8 +6,14 @@ import { ListClassesComponent } from './list-classes/list-classes.component';
 import { DailyScheduleComponent } from './daily-schedule/daily-schedule.component';
 import { TodayClassesComponent } from './today-classes/today-classes.component';
 import { DescriptionClassComponent } from './description-class/description-class.component';
+import { SettingsComponent } from './settings/settings.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: LoginComponent,
+  },
   {
     path: 'home',
     component: ListClassesComponent,
@@ -16,6 +22,11 @@ const routes: Routes = [
   {
     path: 'add-classes',
     component: AddClassesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard],
   },
   {
