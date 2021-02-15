@@ -8,9 +8,9 @@ import { RushDialogComponent } from './rush-dialog/rush-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
-import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting } from '../store/current-session.actions';
+import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses } from '../store/current-session.actions';
 import { take, takeUntil } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
@@ -57,8 +57,10 @@ export class ListClassesComponent implements OnInit {
   rush$: Observable<Rush>;
   selectLoadingRush$: Observable<boolean>;
   selectLoadingSetting$: Observable<boolean>;
+  listTodayClasses$: Observable<Course[]>;
   deletingRush = false;
   fetching = true;
+  listTodayClasses: Course[];
 
   fabButtons = [{
     id: 0,
@@ -109,12 +111,24 @@ export class ListClassesComponent implements OnInit {
         this.store.dispatch(setLoadingSetting({ loadingSetting: isLoadingSetting }));
       });
 
+    this.courseService.getTodayClasses()
+      .subscribe((todayCourses) => {
+        this.store.dispatch(setTodayCourses({ todayCourses }));
+      });
+
     this.list$ = this.store.pipe(select(selectCourses));
     this.notifications$ = this.store.pipe(select(selectNotifications));
     this.selected$ = this.store.pipe(select(selectSelectedCourses));
     this.rush$ = this.store.pipe(select(selectRush));
     this.selectLoadingRush$ = this.store.pipe(select(selectLoadingRush));
     this.selectLoadingSetting$ = this.store.pipe(select(selectLoadingSetting));
+    this.listTodayClasses$ = this.store.pipe(select(selectTodayCourses));
+
+    this.listTodayClasses$.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((listTodayClasses) => {
+      this.listTodayClasses = listTodayClasses;
+    });
 
     combineLatest([this.rush$, this.selectLoadingRush$])
       .pipe(
@@ -194,6 +208,10 @@ export class ListClassesComponent implements OnInit {
     return course.reminders.map(r => (
       moment(r).format('YYYY-MM-DD')
     )).includes(moment().format('YYYY-MM-DD'));
+  }
+
+  isAlreadyRevise(course: Course): boolean {
+    return !this.listTodayClasses.some(c => c._id === course._id);
   }
 
   unselectAll(): void {

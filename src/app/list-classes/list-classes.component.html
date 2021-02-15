@@ -57,7 +57,7 @@
       <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
         [value]="course" [selected]="isSelected(course)">
         {{course.name}}
-        <span class="revision-day" *ngIf="isADayRevision(course)">Cours à réviser aujourd'hui !</span>
+        <span class="revision-day" *ngIf="isADayRevision(course)" [class.-is-already-revise]="isAlreadyRevise(course)">Cours à réviser aujourd'hui !</span>
       </mat-list-option>
     </mat-selection-list>
   </ng-container>

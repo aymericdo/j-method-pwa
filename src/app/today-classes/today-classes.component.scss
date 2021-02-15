@@ -16,6 +16,16 @@
     color: white;
   }
 
+  .course-name {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .is-from-we {
+    font-size: 0.875em;
+    color: #c2185b;
+  }
+
   .delete-button {
     position: absolute;
     right: 1em;

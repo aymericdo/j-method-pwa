@@ -40,6 +40,10 @@
   .revision-day {
     font-size: 0.875em;
     color: #c2185b;
+
+    &.-is-already-revise {
+      color: #00e676;
+    }
   }
 
   .fab-btn-daily-schedule {
