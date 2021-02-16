@@ -1,11 +1,36 @@
 :host {
-  div {
+  color: white;
+
+  > div {
     padding: 1em;
   }
 
-  span {
+  .section-row span {
+    font-size: 16px;
     color: #c2185b;
   }
 
-  color: white;
+  .fab-btn-edit-button {
+    color: white;
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: none;
+  }
+
+  .description-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & > :first-child {
+      margin-right: 0.625rem;
+    }
+  }
+
+  .section-row {
+    display: flex;
+    flex-direction: column;
+  }
 }

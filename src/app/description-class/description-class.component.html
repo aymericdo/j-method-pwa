@@ -6,10 +6,39 @@
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
 <div>
-  <span>Nom</span>
-  <h1 [innerHTML]="(selectedCourse$ | async)?.name"></h1>
-  <span>Description</span>
-  <h3 [innerHTML]="(selectedCourse$ | async)?.description"></h3>
-  <span>Créé le</span>
-  <h3>{{createdDate((selectedCourse$ | async)?.date)}}</h3>
+  <div class="section-row">
+    <span>Nom</span>
+    <h1 [innerHTML]="(selectedCourse$ | async)?.name"></h1>
+  </div>
+  <div class="section-row">
+    <div class="description-section">
+      <span>Description</span>
+      <button
+        *ngIf="!editMode"
+        mat-icon-button color="primary" class="fab-btn-edit-button"
+        aria-label="Edit button"
+        (click)="editModeToggle()"
+      >
+        <mat-icon>mode_edit</mat-icon>
+      </button>
+      <button
+        *ngIf="editMode"
+        mat-icon-button color="primary" class="fab-btn-edit-button"
+        aria-label="Edit button"
+        (click)="submitDescription()"
+      >
+        <mat-icon>done_outline</mat-icon>
+      </button>
+    </div>
+    <div>
+      <h3 *ngIf="!editMode" [innerHTML]="(selectedCourse$ | async)?.description"></h3>
+      <mat-form-field class="full-width" *ngIf="editMode">
+        <textarea matInput [ngModel]="(selectedCourse$ | async)?.description" (ngModelChange)="description = $event" [disabled]="submitting"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="section-row">
+    <span>Créé le</span>
+    <h3>{{createdDate((selectedCourse$ | async)?.date)}}</h3>
+  </div>
 </div>

@@ -2,7 +2,6 @@ import { Action, createReducer, on, createSelector } from '@ngrx/store';
 import * as AppActions from './current-session.actions';
 import { Course, Notification, Rush } from '../list-classes/list-classes.component';
 import { AppState } from '.';
-import * as moment from 'moment';
 import { Settings } from '../settings/settings.component';
 
 export interface CurrentSessionState {
@@ -35,6 +34,7 @@ const currentSessionReducer = createReducer(
   on(AppActions.setRush, (state, { rush }) => ({ ...state, rush })),
   on(AppActions.setLoadingRush, (state, { loadingRush }) => ({ ...state, loadingRush })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
+  on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: [...state.courses.filter(c => c._id !== c._id), course] })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),
   on(AppActions.shiftNotification, (state)  => ({ ...state, notifications: state.notifications.slice(1) })),

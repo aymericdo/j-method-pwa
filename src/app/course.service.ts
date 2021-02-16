@@ -18,6 +18,10 @@ export class CourseService {
     return this.httpClient.get<Course[]>(`${this.server}/api/courses`);
   }
 
+  patchCourses(course: Course): Observable<Course> {
+    return this.httpClient.patch<Course>(`${this.server}/api/courses/${course._id}`, course);
+  }
+
   addCourse(course: Course): Observable<Course> {
     return this.httpClient.post<Course>(`${this.server}/api/courses`, course);
   }

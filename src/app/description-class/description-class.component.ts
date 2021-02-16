@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { CourseService } from '../course.service';
 import { Course } from '../list-classes/list-classes.component';
 import { AppState } from '../store';
-import { setCourses } from '../store/current-session.actions';
+import { setCourse, setCourses } from '../store/current-session.actions';
 import { selectOpenedCourse } from '../store/current-session.reducer';
 
 @Component({
@@ -16,6 +17,9 @@ import { selectOpenedCourse } from '../store/current-session.reducer';
 })
 export class DescriptionClassComponent implements OnInit {
   selectedCourse$: Observable<Course>;
+  editMode: boolean;
+  submitting: boolean = false;
+  description = '';
 
   constructor(
     private courseService: CourseService,
@@ -35,5 +39,21 @@ export class DescriptionClassComponent implements OnInit {
 
   createdDate(date): string {
     return moment(date).format('DD/MM/YYYY');
+  }
+
+  editModeToggle(): void {
+    this.editMode = true
+  }
+
+  submitDescription(): void {
+    this.editMode = false;
+    let course = null;
+    this.selectedCourse$.pipe(take(1)).subscribe((c) => course = c);
+
+    this.store.dispatch(setCourse({ course: { ...course, description: this.description } }));
+
+    this.courseService.patchCourses({ ...course, description: this.description }).subscribe((course: Course) => {
+      this.store.dispatch(setCourse({ course }));
+    });
   }
 }

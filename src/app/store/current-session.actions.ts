@@ -7,6 +7,11 @@ export const setCourses = createAction(
   props<{ courses: Course[] }>()
 );
 
+export const setCourse = createAction(
+  '[App] Set course',
+  props<{ course: Course }>()
+);
+
 export const addCourse = createAction(
   '[App] Add course',
   props<{ course: Course }>()
