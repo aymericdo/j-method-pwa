@@ -41,6 +41,11 @@ export const setSelectedCourses = createAction(
   props<{ selectedCourses: Course[] }>()
 );
 
+export const setCoursesFilter = createAction(
+  '[App] Set courses filter',
+  props<{ coursesFilter: string }>()
+);
+
 export const setTodayCourses = createAction(
   '[App] Set today courses',
   props<{ todayCourses: Course[] }>()

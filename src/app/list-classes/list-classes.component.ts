@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { CourseService } from '../course.service';
-import { combineLatest, forkJoin, Observable, ReplaySubject } from 'rxjs';
+import { combineLatest, forkJoin, interval, Observable, ReplaySubject } from 'rxjs';
 import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { RushDialogComponent } from './rush-dialog/rush-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
-import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses } from '../store/current-session.actions';
-import { take, takeUntil } from 'rxjs/operators';
+import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses, setCoursesFilter } from '../store/current-session.actions';
+import { debounce, filter, take, takeUntil } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
 import { RushService } from '../rush.service';
@@ -58,6 +58,7 @@ export class ListClassesComponent implements OnInit {
   selectLoadingRush$: Observable<boolean>;
   selectLoadingSetting$: Observable<boolean>;
   listTodayClasses$: Observable<Course[]>;
+  coursesFilter$: Observable<string>;
   deletingRush = false;
   fetching = true;
   listTodayClasses: Course[];
@@ -123,6 +124,23 @@ export class ListClassesComponent implements OnInit {
     this.selectLoadingRush$ = this.store.pipe(select(selectLoadingRush));
     this.selectLoadingSetting$ = this.store.pipe(select(selectLoadingSetting));
     this.listTodayClasses$ = this.store.pipe(select(selectTodayCourses));
+    this.coursesFilter$ = this.store.pipe(select(selectCoursesFilter));
+
+    this.coursesFilter$.pipe(
+      debounce(() => interval(300)),
+      filter((courseFilter: string) => courseFilter.length > 2 || !courseFilter.length),
+      takeUntil(this.destroyed$),
+    ).subscribe((courseFilter: string) => {
+      if (!courseFilter.length) {
+        this.courseService.getCourses().subscribe((courses: Course[]) => {
+          this.store.dispatch(setCourses({ courses }));
+        });
+      } else {
+        this.courseService.getCoursesWithFilter(courseFilter).subscribe((courses: Course[]) => {
+          this.store.dispatch(setCourses({ courses }));
+        });
+      }
+    });
 
     this.listTodayClasses$.pipe(
       takeUntil(this.destroyed$),
@@ -196,6 +214,10 @@ export class ListClassesComponent implements OnInit {
     this.store.dispatch(setSelectedCourses({
       selectedCourses: courses.selectedOptions.selected.map((s: MatListOption) => s.value) as Course[],
     }));
+  }
+
+  filterCourses(event: string): void {
+    this.store.dispatch(setCoursesFilter({ coursesFilter: event }));
   }
 
   isSelected(course: Course): boolean {

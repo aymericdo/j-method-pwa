@@ -51,6 +51,13 @@
     mode="indeterminate">
   </mat-progress-spinner>
 </div>
+<mat-form-field class="input-search">
+  <mat-label>Recherche</mat-label>
+  <input type="text" matInput placeholder="ton cours" (input)="filterCourses($event.target.value)">
+  <mat-icon matSuffix>
+    <mat-icon [class.-pink]="(coursesFilter$ | async).length > 2">search</mat-icon>
+  </mat-icon>
+</mat-form-field>
 <ng-container *ngIf="!fetching">
   <ng-container *ngIf="(list$ | async)?.length; else empty">
     <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">

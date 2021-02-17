@@ -7,6 +7,7 @@ import { Settings } from '../settings/settings.component';
 export interface CurrentSessionState {
   courses: Course[];
   selectedCourses: Course[];
+  coursesFilter: string;
   todayCourses: Course[];
   notifications: Notification[];
   rush: Rush;
@@ -18,6 +19,7 @@ export interface CurrentSessionState {
 export const initialState: CurrentSessionState = {
   courses: [],
   selectedCourses: [],
+  coursesFilter: '',
   todayCourses: [],
   notifications: [],
   rush: null,
@@ -35,6 +37,7 @@ const currentSessionReducer = createReducer(
   on(AppActions.setLoadingRush, (state, { loadingRush }) => ({ ...state, loadingRush })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
   on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: [...state.courses.filter(c => c._id !== c._id), course] })),
+  on(AppActions.setCoursesFilter, (state, { coursesFilter }) => ({ ...state, coursesFilter })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),
   on(AppActions.shiftNotification, (state)  => ({ ...state, notifications: state.notifications.slice(1) })),
@@ -76,6 +79,10 @@ export const selectRush = createSelector(
 export const selectLoadingRush = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.loadingRush,
+);
+export const selectCoursesFilter = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.coursesFilter,
 );
 export const selectSelectedCourses = createSelector(
   selectCurrentSession,
