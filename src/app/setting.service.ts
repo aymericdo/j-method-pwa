@@ -25,4 +25,8 @@ export class SettingService {
   deleteWeekEndRevisions(): Observable<boolean> {
     return this.httpClient.delete<boolean>(`${this.server}/api/settings/we-revisions`);
   }
+
+  fixCourses(): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.server}/api/fix-courses`);
+  }
 }

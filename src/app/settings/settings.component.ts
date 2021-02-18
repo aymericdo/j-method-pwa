@@ -55,7 +55,7 @@ export class SettingsComponent {
     this.destroyed$.complete();
   }
 
-  openDialog(dialog: 'resetWE'): void {
+  openDialog(dialog: 'resetWE' | 'blop'): void {
     if (dialog === 'resetWE') {
       const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
         data: {
@@ -66,6 +66,18 @@ export class SettingsComponent {
       daySchedulerDialogRef.afterClosed().subscribe((result: boolean) => {
         if (result) {
           this.handleResetWeekend();
+        }
+      });
+    } else if (dialog === 'blop') {
+      const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
+        data: {
+          title: 'Je suis vraiment au tel avec toi en ce moment ?',
+        },
+      });
+
+      daySchedulerDialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.settingService.fixCourses().subscribe(() => {});
         }
       });
     }
