@@ -93,30 +93,6 @@ export class ListClassesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.store.dispatch(setNotifications({ notifications }));
-    });
-
-    this.courseService.getCourses().subscribe((courses: Course[]) => {
-      this.fetching = false;
-      this.store.dispatch(setCourses({ courses }));
-    });
-
-    this.rushService.getRush().subscribe(({ rush, isLoadingRush }) => {
-      this.store.dispatch(setLoadingRush({ loadingRush: isLoadingRush }));
-      this.store.dispatch(setRush({ rush }));
-    });
-
-    this.settingService.getSettings()
-      .subscribe(({ isLoadingSetting }) => {
-        this.store.dispatch(setLoadingSetting({ loadingSetting: isLoadingSetting }));
-      });
-
-    this.courseService.getTodayClasses()
-      .subscribe((todayCourses) => {
-        this.store.dispatch(setTodayCourses({ todayCourses }));
-      });
-
     this.list$ = this.store.pipe(select(selectCourses));
     this.notifications$ = this.store.pipe(select(selectNotifications));
     this.selected$ = this.store.pipe(select(selectSelectedCourses));
@@ -154,6 +130,8 @@ export class ListClassesComponent implements OnInit {
     ).subscribe(([rush, loading]) => {
       this.fabButtons = this.fabButtons.map((btn) => btn.name === 'rush' ? { ...btn, disabled: !!rush || loading } : { ...btn })
     });
+
+    this.fetchEverything()
   }
 
   ngOnDestroy(): void {
@@ -210,6 +188,10 @@ export class ListClassesComponent implements OnInit {
     }
   }
 
+  refresh(): void {
+    this.fetchEverything()
+  }
+
   onSelection(event: MatSelectionListChange, courses: MatSelectionList): void {
     this.store.dispatch(setSelectedCourses({
       selectedCourses: courses.selectedOptions.selected.map((s: MatListOption) => s.value) as Course[],
@@ -218,6 +200,10 @@ export class ListClassesComponent implements OnInit {
 
   filterCourses(event: string): void {
     this.store.dispatch(setCoursesFilter({ coursesFilter: event }));
+  }
+
+  resetCoursesFilter(): void {
+    this.store.dispatch(setCoursesFilter({ coursesFilter: '' }));
   }
 
   isSelected(course: Course): boolean {
@@ -289,5 +275,42 @@ export class ListClassesComponent implements OnInit {
 
   trackByMethod(index: number, el: Course): string {
     return el._id;
+  }
+
+  private fetchEverything(): void {
+    this.fetching = true;
+    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
+      this.store.dispatch(setNotifications({ notifications }));
+    });
+
+    let coursesFilter: string;
+    this.coursesFilter$.pipe(take(1)).subscribe(c => coursesFilter = c)
+
+    if (coursesFilter && coursesFilter.length > 2) {
+      this.courseService.getCoursesWithFilter(coursesFilter).subscribe((courses: Course[]) => {
+        this.fetching = false;
+        this.store.dispatch(setCourses({ courses }));
+      });
+    } else {
+      this.courseService.getCourses().subscribe((courses: Course[]) => {
+        this.fetching = false;
+        this.store.dispatch(setCourses({ courses }));
+      });
+    }
+
+    this.rushService.getRush().subscribe(({ rush, isLoadingRush }) => {
+      this.store.dispatch(setLoadingRush({ loadingRush: isLoadingRush }));
+      this.store.dispatch(setRush({ rush }));
+    });
+
+    this.settingService.getSettings()
+      .subscribe(({ isLoadingSetting }) => {
+        this.store.dispatch(setLoadingSetting({ loadingSetting: isLoadingSetting }));
+      });
+
+    this.courseService.getTodayClasses()
+      .subscribe((todayCourses) => {
+        this.store.dispatch(setTodayCourses({ todayCourses }));
+      });
   }
 }

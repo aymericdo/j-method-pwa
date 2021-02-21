@@ -9,7 +9,6 @@ import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfirmationDeletionDialogComponent } from '../list-classes/confirmation-deletion-dialog/confirmation-deletion-dialog.component';
-import { Course } from '../list-classes/list-classes.component';
 import { MatDialog } from '@angular/material/dialog';
 
 export interface Settings {

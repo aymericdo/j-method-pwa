@@ -6,7 +6,7 @@
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
-    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.0.0)'"></span>
+    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.0.1)'"></span>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
@@ -26,6 +26,13 @@
       [routerLink]="['/detail-class', (selected$ | async)[0]._id]">
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
+
+    <button *ngIf="!(selected$ | async)?.length"
+      mat-icon-button aria-label="icon-button with refresh icon"
+      (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+
 
     <button *ngIf="!(selected$ | async)?.length"
       [disabled]="(selectLoadingSetting$ | async)"
@@ -53,9 +60,10 @@
 </div>
 <mat-form-field class="input-search">
   <mat-label>Recherche</mat-label>
-  <input type="text" matInput autocomplete="off" placeholder="ton cours" (input)="filterCourses($event.target.value)">
+  <input type="text" matInput autocomplete="off" placeholder="ton cours" [value]="(coursesFilter$ | async)" (input)="filterCourses($event.target.value)">
   <mat-icon matSuffix>
-    <mat-icon [class.-pink]="(coursesFilter$ | async).length > 2">search</mat-icon>
+    <mat-icon *ngIf="(coursesFilter$ | async).length <= 2">search</mat-icon>
+    <mat-icon *ngIf="(coursesFilter$ | async).length > 2" (click)="resetCoursesFilter()" class="search-off-btn">search_off</mat-icon>
   </mat-icon>
 </mat-form-field>
 <ng-container *ngIf="!fetching">

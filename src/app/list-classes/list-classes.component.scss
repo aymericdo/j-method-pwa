@@ -14,7 +14,8 @@
     box-sizing: border-box;
     padding: 0 1rem;
 
-    mat-icon.-pink {
+    .search-off-btn {
+      cursor: pointer;
       color: #c2185b;
     }
   }
