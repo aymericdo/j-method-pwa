@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Difficulties } from '../list-classes/list-classes.component';
+import { Difficulties, Rush } from '../list-classes/list-classes.component';
 import { CourseService } from '../course.service';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { addCourse } from '../store/current-session.actions';
 import { AppState } from '../store';
+import { selectRush } from '../store/current-session.reducer';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-classes',
@@ -17,13 +20,23 @@ export class AddClassesComponent {
   description = '';
   difficulties: Difficulties = 'easy';
   sendToGoogleCalendar = true;
+  sendToRush = false;
   submitting = false;
+  rush$: Observable<Rush>;
 
   constructor(
     private router: Router,
     private courseService: CourseService,
     private store: Store<AppState>,
   ) {}
+
+  ngOnInit(): void {
+    this.rush$ = this.store.pipe(select(selectRush));
+    this.rush$.pipe(take(1)).subscribe(rush => {
+      this.sendToGoogleCalendar = !rush;
+      this.sendToRush = !!rush;
+    });
+  }
 
   saveCourses(): void {
     this.submitting = true;
@@ -36,7 +49,11 @@ export class AddClassesComponent {
       reminders: [],
     };
 
-    this.courseService.addCourse({ ...newCourse, sendToGoogleCalendar: this.sendToGoogleCalendar })
+    this.courseService.addCourse({
+      ...newCourse,
+      sendToGoogleCalendar: this.sendToGoogleCalendar,
+      sendToRush: this.sendToRush,
+    })
       .subscribe((course) => {
         this.store.dispatch(addCourse({ course }));
         this.submitting = false;

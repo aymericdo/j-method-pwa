@@ -33,6 +33,10 @@
       <mat-checkbox [checked]="sendToGoogleCalendar" (change)="sendToGoogleCalendar = !sendToGoogleCalendar"
       [disabled]="submitting">Envoyer dans ton calendrier</mat-checkbox>
     </div>
+    <div *ngIf="(rush$ | async)" class="rush-checkbox">
+      <mat-checkbox [checked]="sendToRush" (change)="sendToRush = !sendToRush"
+      [disabled]="submitting">Envoyer dans ton rush</mat-checkbox>
+    </div>
     <button class="submit-button" [disabled]="!name || submitting" mat-stroked-button color="primary" value="Enregistrer">Enregistrer</button>
   </div>
 </form>

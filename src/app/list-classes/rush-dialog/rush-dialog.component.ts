@@ -18,6 +18,7 @@ import { setLoadingRush } from 'src/app/store/current-session.actions';
 export class RushDialogComponent implements OnInit {
   startDate = new Date();
   endDate = null;
+  isDayRevision = false;
   list$: Observable<Course[]>;
   submitting = false;
 
@@ -35,7 +36,7 @@ export class RushDialogComponent implements OnInit {
     if (!this.endDate) { return; }
     this.submitting = true;
 
-    this.rushService.addRush(this.startDate, this.endDate)
+    this.rushService.addRush(this.startDate, this.endDate, this.isDayRevision)
       .subscribe(() => {
         this.submitting = false;
         this.store.dispatch(setLoadingRush({ loadingRush: true }));

@@ -15,7 +15,14 @@
     transform: translate(-50%, -50%);
   }
 
-  .block {
+  .is-day-revision {
+    padding: 0.875rem 0
+  }
+
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     flex: 1;
   }
 }

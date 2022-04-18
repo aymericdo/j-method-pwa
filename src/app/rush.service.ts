@@ -14,8 +14,8 @@ export class RushService {
     private httpClient: HttpClient,
   ) { }
 
-  addRush(startDate: Date, endDate: Date): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.server}/api/rush`, { startDate, endDate });
+  addRush(startDate: Date, endDate: Date, isDayRevision: boolean): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.server}/api/rush`, { startDate, endDate, isDayRevision });
   }
 
   getRush(): Observable<{ rush: Rush, isLoadingRush: boolean }> {

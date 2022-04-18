@@ -28,6 +28,7 @@ export interface Course {
   date: string;
   ids?: string[];
   sendToGoogleCalendar?: boolean;
+  sendToRush?: boolean;
   reminders: string[];
 }
 
