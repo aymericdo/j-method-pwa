@@ -38,6 +38,10 @@
     </div>
   </div>
   <div class="section-row">
+    <span>Difficulté</span>
+    <h3>{{(selectedCourse$ | async)?.difficulties}}</h3>
+  </div>
+  <div class="section-row">
     <span>Créé le</span>
     <h3>{{createdDate((selectedCourse$ | async)?.date)}}</h3>
   </div>

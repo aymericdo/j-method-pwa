@@ -3,7 +3,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Store, select } from '@ngrx/store';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { AppState } from 'src/app/store';
 import { selectCourses } from 'src/app/store/current-session.reducer';
 import { Course } from '../list-classes.component';
@@ -36,7 +35,7 @@ export class RushDialogComponent implements OnInit {
     if (!this.endDate) { return; }
     this.submitting = true;
 
-    this.rushService.addRush(this.startDate, this.endDate, this.isDayRevision)
+    this.rushService.addRush(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), this.isDayRevision)
       .subscribe(() => {
         this.submitting = false;
         this.store.dispatch(setLoadingRush({ loadingRush: true }));
