@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Course, Notification, Rush } from '../list-classes/list-classes.component';
-import { Settings } from '../settings/settings.component';
+import { Weekend } from '../list-classes/weekend-dialog/weekend-dialog.component';
 
 export const setCourses = createAction(
   '[App] Set courses',
@@ -53,7 +53,7 @@ export const setTodayCourses = createAction(
 
 export const setSettings = createAction(
   '[App] Set settings',
-  props<{ settings: Settings }>()
+  props<{ settings: Weekend }>()
 );
 
 export const setLoadingSetting = createAction(

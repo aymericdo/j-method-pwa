@@ -5,12 +5,13 @@ import { CourseService } from '../course.service';
 import { combineLatest, forkJoin, interval, Observable, ReplaySubject } from 'rxjs';
 import { ConfirmationSignoutDialogComponent } from './confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { RushDialogComponent } from './rush-dialog/rush-dialog.component';
+import { WeekendDialogComponent } from './weekend-dialog/weekend-dialog.component';
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter, selectSettings } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
-import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses, setCoursesFilter } from '../store/current-session.actions';
+import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses, setCoursesFilter, setSettings } from '../store/current-session.actions';
 import { debounce, filter, take, takeUntil } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
@@ -79,6 +80,11 @@ export class ListClassesComponent implements OnInit {
     name: 'rush',
     icon: 'shutter_speed',
     disabled: false,
+  }, {
+    id: 3,
+    name: 'weekend',
+    icon: 'next_week',
+    disabled: false,
   }];
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -140,7 +146,7 @@ export class ListClassesComponent implements OnInit {
     this.destroyed$.complete();
   }
 
-  openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse'): void {
+  openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse' | 'resetWE' | 'weekend'): void {
     if (dialog === 'scheduler') {
       let selected = [];
       this.store.pipe(select(selectSelectedCourses), take(1)).subscribe((sltd => selected = sltd));
@@ -172,6 +178,8 @@ export class ListClassesComponent implements OnInit {
           this.deleteRush()
         }
       });
+    } else if (dialog === 'weekend') {
+      this.dialog.open(WeekendDialogComponent);
     } else if (dialog === 'deleteCourse') {
       const daySchedulerDialogRef = this.dialog.open(ConfirmationDeletionDialogComponent, {
         data: {
@@ -269,6 +277,11 @@ export class ListClassesComponent implements OnInit {
 
       case 2: {
         this.openDialog('rush');
+        break;
+      }
+
+      case 3: {
+        this.openDialog('weekend');
         break;
       }
     }

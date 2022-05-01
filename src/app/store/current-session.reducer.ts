@@ -2,7 +2,7 @@ import { Action, createReducer, on, createSelector } from '@ngrx/store';
 import * as AppActions from './current-session.actions';
 import { Course, Notification, Rush } from '../list-classes/list-classes.component';
 import { AppState } from '.';
-import { Settings } from '../settings/settings.component';
+import { Weekend } from '../list-classes/weekend-dialog/weekend-dialog.component';
 
 export interface CurrentSessionState {
   courses: Course[];
@@ -13,7 +13,7 @@ export interface CurrentSessionState {
   rush: Rush;
   loadingRush: boolean;
   loadingSetting: boolean;
-  settings: Settings;
+  settings: Weekend;
 }
 
 export const initialState: CurrentSessionState = {
@@ -26,6 +26,7 @@ export const initialState: CurrentSessionState = {
   loadingRush: false,
   loadingSetting: false,
   settings: {
+    endDate: null,
     maxCoursesNumber: null,
   },
 };

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Settings } from './settings/settings.component';
+import { Weekend } from './list-classes/weekend-dialog/weekend-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +14,12 @@ export class SettingService {
     private httpClient: HttpClient,
   ) { }
 
-  postSettings(settings: Settings): Observable<Settings> {
-    return this.httpClient.post<Settings>(`${this.server}/api/settings`, settings);
+  postSettings(settings: Weekend): Observable<Weekend> {
+    return this.httpClient.post<Weekend>(`${this.server}/api/settings`, settings);
   }
 
-  getSettings(): Observable<{ settings: Settings, isLoadingSetting: boolean }> {
-    return this.httpClient.get<{ settings: Settings, isLoadingSetting: boolean }>(`${this.server}/api/settings`);
+  getSettings(): Observable<{ settings: Weekend, isLoadingSetting: boolean }> {
+    return this.httpClient.get<{ settings: Weekend, isLoadingSetting: boolean }>(`${this.server}/api/settings`);
   }
 
   deleteWeekEndRevisions(): Observable<boolean> {

@@ -19,6 +19,7 @@ import { AppComponent } from './app.component';
 import { ListClassesComponent } from './list-classes/list-classes.component';
 import { HoursSelectorDialogComponent } from './list-classes/hours-selector-dialog/hours-selector-dialog.component';
 import { RushDialogComponent } from './list-classes/rush-dialog/rush-dialog.component';
+import { WeekendDialogComponent } from './list-classes/weekend-dialog/weekend-dialog.component';
 import { ConfirmationSignoutDialogComponent } from './list-classes/confirmation-signout-dialog/confirmation-signout-dialog.component';
 import { DaySchedulerDialogComponent } from './list-classes/day-scheduler-dialog/day-scheduler-dialog.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -59,6 +60,7 @@ import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation
     LoginComponent,
     OffsetTopDirective,
     RushDialogComponent,
+    WeekendDialogComponent,
     ScrollableDirective,
     SettingsComponent,
     SpeedDialFabComponent,

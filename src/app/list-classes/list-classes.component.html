@@ -6,7 +6,7 @@
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
-    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.0.2)'"></span>
+    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.0.5)'"></span>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
