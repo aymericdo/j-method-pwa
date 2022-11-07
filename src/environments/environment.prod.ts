@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  server: 'https://j-method.herokuapp.com',
+  server: 'https://backend.aymericdo.ovh/j-methodback',
 };
