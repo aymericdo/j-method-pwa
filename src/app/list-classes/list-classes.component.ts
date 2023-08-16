@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter, selectSettings } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
 import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses, setCoursesFilter, setSettings } from '../store/current-session.actions';
-import { debounce, filter, take, takeUntil } from 'rxjs/operators';
+import { debounce, filter, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as moment from 'moment';
 import { RushService } from '../rush.service';
@@ -87,6 +87,9 @@ export class ListClassesComponent implements OnInit {
     disabled: false,
   }];
 
+  isIndeterminate: boolean = false;
+  allComplete: boolean = false;
+
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(
@@ -131,6 +134,21 @@ export class ListClassesComponent implements OnInit {
       this.listTodayClasses = listTodayClasses;
     });
 
+    this.selected$.pipe(
+      withLatestFrom(
+        this.list$
+      ),
+      takeUntil(this.destroyed$),
+      ).subscribe(([selected, list]) => {
+        if (selected.length) {
+          this.allComplete = selected.length === list.length;
+          this.isIndeterminate = !this.allComplete;
+        } else {
+          this.allComplete = false;
+          this.isIndeterminate = false;
+        }
+    });
+
     combineLatest([this.rush$, this.selectLoadingRush$])
       .pipe(
         takeUntil(this.destroyed$),
@@ -139,6 +157,23 @@ export class ListClassesComponent implements OnInit {
     });
 
     this.fetchEverything()
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+
+    let currentList = [];
+    this.list$.pipe(take(1)).subscribe((list) => currentList = list);
+
+    if (completed) {
+      this.store.dispatch(setSelectedCourses({
+        selectedCourses: currentList as Course[],
+      }));
+    } else {
+      this.store.dispatch(setSelectedCourses({
+        selectedCourses: [],
+      }));
+    }
   }
 
   ngOnDestroy(): void {

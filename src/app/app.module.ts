@@ -97,9 +97,6 @@ import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
-  entryComponents: [
-    ConfirmationSignoutDialogComponent,
-  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

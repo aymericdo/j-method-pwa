@@ -68,6 +68,16 @@
 </mat-form-field>
 <ng-container *ngIf="!fetching">
   <ng-container *ngIf="(list$ | async)?.length; else empty">
+    <div class="all-checkbox-section">
+      <mat-checkbox
+        class="all-checkbox"
+        [checked]="allComplete"
+        [indeterminate]="isIndeterminate"
+        (change)="setAll($event.checked)"
+        [labelPosition]="'before'">
+        Tous les cours
+      </mat-checkbox>
+    </div>
     <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
       <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
         [value]="course" [selected]="isSelected(course)">
