@@ -133,7 +133,6 @@
       }
     }
   },
-  "defaultProject": "j-meth",
   "cli": {
     "analytics": false
   }
