@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { environment } from '../../environments/environment';\nimport * as fromCurrentSession from './current-session.reducer';\nexport const reducers = {\n  currentSession: fromCurrentSession.reducer\n};\nexport const metaReducers = !environment.production ? [] : [];","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
