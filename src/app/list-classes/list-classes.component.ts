@@ -325,10 +325,6 @@ export class ListClassesComponent implements OnInit {
     }
   }
 
-  trackByMethod(index: number, el: Course): string {
-    return el._id;
-  }
-
   private fetchEverything(): void {
     this.fetching = true;
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {

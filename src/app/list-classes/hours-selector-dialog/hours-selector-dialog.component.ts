@@ -42,8 +42,4 @@ export class HoursSelectorDialogComponent implements AfterViewInit {
     this.deltaChanged.emit(minutes);
     this.bottomSheetRef.dismiss();
   }
-
-  trackByMethod(index: number, el: string): string {
-    return el;
-  }
 }

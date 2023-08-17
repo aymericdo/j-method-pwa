@@ -82,10 +82,6 @@ export class DaySchedulerDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close(notifs);
   }
 
-  trackByMethod(index: number, el: Course): string {
-    return el.name;
-  }
-
   private difficultiesToDuration(difficulties: Difficulties): number {
     return difficulties === 'easy' ? 60 : 120;
   }

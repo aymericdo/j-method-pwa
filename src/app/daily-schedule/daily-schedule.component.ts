@@ -96,8 +96,4 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
       this.store.dispatch(setNotifications({ notifications }));
     });
   }
-
-  trackByMethod(index: number, el: Notification): string {
-    return el._id;
-  }
 }

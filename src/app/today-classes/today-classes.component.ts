@@ -36,10 +36,6 @@ export class TodayClassesComponent implements OnInit {
       })
   }
 
-  trackByMethod(index: number, el: Course): string {
-    return el._id;
-  }
-
   openDialog($event: Event, dialog: 'deleteCourse', course: Course): void {
     $event.stopPropagation();
     $event.preventDefault();

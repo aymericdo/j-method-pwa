@@ -1,7 +1,7 @@
 <h2>Durée de révision</h2>
 <app-infinite-scroll appScrollable (scrolled)="addNextBatch()">
   <mat-nav-list>
-    <a appOffsetTop *ngFor="let minute of minutes; trackBy: trackByMethod" mat-list-item (click)="handleClick(minute)" #minute [data-min]="minute">
+    <a appOffsetTop *ngFor="let minute of minutes" mat-list-item (click)="handleClick(minute)" #minute [data-min]="minute">
       <span>{{minute}} {{ minute > 1 ? 'minutes' : 'minute' }}</span>
     </a>
   </mat-nav-list>

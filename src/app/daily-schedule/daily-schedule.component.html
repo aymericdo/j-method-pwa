@@ -38,7 +38,7 @@
 <div class="second-row">
   <ng-container *ngIf="(notifications$ | async)?.length; else empty">
     <mat-list>
-      <mat-list-item *ngFor="let notif of (notifications$ | async); let isFirst = first; trackBy: trackByMethod" [value]="notif">
+      <mat-list-item *ngFor="let notif of (notifications$ | async); let isFirst = first" [value]="notif">
         {{notif.course.name}}
         <span *ngIf="isFirst" class="underliner" [style.width]="percentageAccomplished"></span>
         <span *ngIf="!isFirst" class="underliner" [style.width]="'100%'"></span>

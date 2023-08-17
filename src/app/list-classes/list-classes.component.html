@@ -86,7 +86,7 @@
       </mat-checkbox>
     </div>
     <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
-      <mat-list-option *ngFor="let course of (list$ | async); trackBy: trackByMethod"
+      <mat-list-option *ngFor="let course of (list$ | async);"
         [value]="course" [selected]="isSelectedByCourseId[course._id]">
         <span matListItemTitle>{{course.name}}</span>
         <span matListItemLine class="revision-day" *ngIf="isADayRevision(course) && !isAlreadyRevise(course)">
