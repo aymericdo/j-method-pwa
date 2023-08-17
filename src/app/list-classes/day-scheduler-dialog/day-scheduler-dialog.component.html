@@ -3,15 +3,18 @@
 <div mat-dialog-content>
   <mat-list>
     <mat-list-item *ngFor="let duration of durationList; trackBy: trackByMethod">
-      <span [innerHTML]="duration.course.name"></span>
-      <span class="separator" [innerHTML]="' - '"></span>
-      <span class="duration">{{ duration.duration }} minutes</span>
-      <span class="spacer"></span>
-      <button
-        mat-icon-button aria-label="Edit timer button"
-        (click)="editTimer(duration)">
-        <mat-icon>edit</mat-icon>
-      </button>
+      <div matListItemTitle>
+        <span [innerHTML]="duration.course.name"></span>
+        <span class="separator" [innerHTML]="' - '"></span>
+        <span class="duration">{{ duration.duration }} minutes</span>
+      </div>
+      <div matListItemMeta>
+        <button
+          mat-icon-button aria-label="Edit timer button"
+          (click)="editTimer(duration)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
     </mat-list-item>
   </mat-list>
 </div>

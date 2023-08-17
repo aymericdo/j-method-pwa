@@ -65,6 +65,8 @@ export class ListClassesComponent implements OnInit {
   fetching = true;
   listTodayClasses: Course[];
 
+  selected: Course[];
+
   fabButtons = [{
     id: 0,
     name: 'add',
@@ -89,6 +91,8 @@ export class ListClassesComponent implements OnInit {
 
   isIndeterminate: boolean = false;
   allComplete: boolean = false;
+
+  isSelectedByCourseId = {}
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -140,6 +144,13 @@ export class ListClassesComponent implements OnInit {
       ),
       takeUntil(this.destroyed$),
       ).subscribe(([selected, list]) => {
+        this.selected = selected;
+
+        this.isSelectedByCourseId = list.reduce((prev, course) => {
+          prev[course._id] = selected.some((c) => c._id === course._id);
+          return prev;
+        }, {});
+
         if (selected.length) {
           this.allComplete = selected.length === list.length;
           this.isIndeterminate = !this.allComplete;
@@ -183,12 +194,10 @@ export class ListClassesComponent implements OnInit {
 
   openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse' | 'resetWE' | 'weekend'): void {
     if (dialog === 'scheduler') {
-      let selected = [];
-      this.store.pipe(select(selectSelectedCourses), take(1)).subscribe((sltd => selected = sltd));
       const daySchedulerDialogRef = this.dialog.open(DaySchedulerDialogComponent, {
         height: '400px',
         width: '600px',
-        data: { selected },
+        data: { selected: this.selected },
       });
 
       daySchedulerDialogRef.afterClosed().subscribe((result: Notification[]) => {
@@ -250,12 +259,6 @@ export class ListClassesComponent implements OnInit {
     this.store.dispatch(setCoursesFilter({ coursesFilter: '' }));
   }
 
-  isSelected(course: Course): boolean {
-    let selected = [];
-    this.selected$.pipe(take(1)).subscribe(sltd => selected = sltd);
-    return selected && selected.some(s => s._id === course._id);
-  }
-
   isADayRevision(course: Course): boolean {
     return course.reminders.map(r => (
       moment(r).format('YYYY-MM-DD')
@@ -282,7 +285,7 @@ export class ListClassesComponent implements OnInit {
       let list = [];
       this.store.pipe(select(selectCourses), take(1)).subscribe(l => list = l);
 
-      const newList = list.filter((c: Course) => !this.isSelected(c));
+      const newList = list.filter((c: Course) => !this.isSelectedByCourseId[c._id]);
       this.unselectAll();
       this.store.dispatch(setCourses({
         courses: newList,

@@ -91,7 +91,7 @@ export const selectSelectedCourses = createSelector(
   );
   export const selectIsOnPause = createSelector(
     selectCurrentSession,
-    (state: CurrentSessionState) => !!state.notifications[0].isOnPauseSince,
+    (state: CurrentSessionState) => !!state.notifications[0]?.isOnPauseSince,
     );
 export const selectOpenedCourse = (id: string) => createSelector(
   selectCurrentSession,

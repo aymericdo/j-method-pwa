@@ -5,7 +5,7 @@
 >
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<div class="first-row">
+<div *ngIf="(notifications$ | async)?.length" class="first-row">
   <ng-container *ngIf="!!countdown">
     <span class="countdown">{{displayCountdown}}</span>
     <div class="buttons-section">

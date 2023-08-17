@@ -48,7 +48,7 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
 
       this.notifications = notifications;
 
-      if (!notifications[0].isOnPauseSince) {
+      if (!notifications[0]?.isOnPauseSince) {
         this.interval = setInterval(() => {
           this.countdown -= 1;
           this.setPercentageAccomplished(notifications);
@@ -77,7 +77,7 @@ export class DailyScheduleComponent implements OnInit, OnDestroy {
   }
 
   setCountdown(notifications: Notification[]): void {
-    if (notifications[0].isOnPauseSince) {
+    if (notifications[0]?.isOnPauseSince) {
       this.countdown = +moment(notifications[0].date).diff(moment(notifications[0].isOnPauseSince), 'second');
     } else {
       this.countdown = +moment(notifications[0].date).diff(moment(), 'second');

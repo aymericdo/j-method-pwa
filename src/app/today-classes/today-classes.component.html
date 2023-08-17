@@ -9,14 +9,14 @@
   <mat-nav-list #courses (selectionChange)="onSelection($event, courses)">
     <a mat-list-item *ngFor="let course of (list$ | async); trackBy: trackByMethod"
       [routerLink]="['/detail-class', course._id]">
-      <div class="course-name">
-        {{course.name}}
-        <span class="is-from-we" *ngIf="course.isFromWE">Cours du week end</span>
+      <div matListItemTitle>{{course.name}}</div>
+      <span matListItemLine class="is-from-we" *ngIf="course.isFromWE">Cours du week end</span>
+      <div matListItemMeta>
+        <button class="delete-button" mat-icon-button aria-label="Delete courses button"
+          (click)="openDialog($event, 'deleteCourse', course)">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
       </div>
-      <button class="delete-button" mat-icon-button aria-label="Delete courses button"
-        (click)="openDialog($event, 'deleteCourse', course)">
-        <mat-icon>remove_circle_outline</mat-icon>
-      </button>
     </a>
   </mat-nav-list>
 </ng-container>
