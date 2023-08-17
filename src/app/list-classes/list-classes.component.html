@@ -1,12 +1,19 @@
 <p>
   <mat-toolbar>
-    <button *ngIf="(selected$ | async)?.length"
-      mat-icon-button aria-label="icon-button with keyboard_arrow_left icon"
-      (click)='unselectAll()'>
-      <mat-icon>keyboard_arrow_left</mat-icon>
-    </button>
-    <span [innerHTML]="(selected$ | async)?.length ? (selected$ | async)?.length : 'La méthode des J'"></span>
-    <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.9.5)'"></span>
+    <ng-container *ngIf="(selected$ | async)?.length">
+      <button
+        mat-icon-button aria-label="icon-button with keyboard_arrow_left icon"
+        (click)='unselectAll()'>
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <span [innerHTML]="(selected$ | async)?.length"></span>
+    </ng-container>
+    <ng-container *ngIf="!(selected$ | async)?.length">
+      <div class="title-section">
+        <span [innerHTML]="'La méthode des J'"></span>
+        <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.9.5)'"></span>
+      </div>
+    </ng-container>
     <span class="spacer"></span>
 
     <button *ngIf="(selected$ | async)?.length"
