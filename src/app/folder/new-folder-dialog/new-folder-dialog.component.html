@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Nouveau dossier</h1>
+<div mat-dialog-content>
+  <p>Entre le nom de ton nouveau dossier stp</p>
+  <mat-form-field>
+    <mat-label>Nom du dossier</mat-label>
+    <input matInput [(ngModel)]="data.newFolder">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="handleClick()">Annuler</button>
+  <button mat-button [disabled]="!!data.newFolder?.length ? data.folders.includes(data.newFolder) : true" [mat-dialog-close]="data.newFolder" cdkFocusInitial>Ok</button>
+</div>

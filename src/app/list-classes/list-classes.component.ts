@@ -9,7 +9,7 @@ import { WeekendDialogComponent } from './weekend-dialog/weekend-dialog.componen
 import { DaySchedulerDialogComponent } from './day-scheduler-dialog/day-scheduler-dialog.component';
 import { NotificationService } from '../notification.service';
 import { Router } from '@angular/router';
-import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter, selectSettings } from '../store/current-session.reducer';
+import { selectNotifications, selectCourses, selectSelectedCourses, selectRush, selectLoadingRush, selectLoadingSetting, selectTodayCourses, selectCoursesFilter, selectSettings, selectCoursesWithVisibleFolder } from '../store/current-session.reducer';
 import { Store, select } from '@ngrx/store';
 import { setNotifications, setCourses, setSelectedCourses, setRush, setLoadingRush, setLoadingSetting, setTodayCourses, setCoursesFilter, setSettings } from '../store/current-session.actions';
 import { debounce, filter, take, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -31,6 +31,8 @@ export interface Course {
   sendToGoogleCalendar?: boolean;
   sendToRush?: boolean;
   reminders: string[];
+  folder?: string;
+  hidden?: string;
 }
 
 export interface Notification {
@@ -107,7 +109,7 @@ export class ListClassesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.list$ = this.store.pipe(select(selectCourses));
+    this.list$ = this.store.pipe(select(selectCoursesWithVisibleFolder));
     this.notifications$ = this.store.pipe(select(selectNotifications));
     this.selected$ = this.store.pipe(select(selectSelectedCourses));
     this.rush$ = this.store.pipe(select(selectRush));
@@ -236,7 +238,7 @@ export class ListClassesComponent implements OnInit {
           this.removeCourses()
         }
       });
-    } else {
+    } else if (dialog === 'signout') {
       this.dialog.open(ConfirmationSignoutDialogComponent);
     }
   }

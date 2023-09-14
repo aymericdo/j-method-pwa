@@ -1,0 +1,175 @@
+<button
+  mat-icon-button color="primary" class="fab-btn-back-button"
+  aria-label="Home button"
+  routerLink="/home"
+>
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+
+<button
+  mat-fab color="primary" class="fab-btn-new-folder-button"
+  aria-label="New Folder button"
+  (click)="openNewFolderDialog()"
+>
+  <mat-icon>create_new_folder</mat-icon>
+</button>
+
+<div *ngIf="fetching" class="progress-spinner">
+  <mat-progress-spinner
+    color="primary"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+
+<div *ngIf="!fetching" class="list-section">
+  <div cdkDropListGroup>
+    <div class="example-container">
+      <h2 class="folder-name">
+        Sans dossier
+        <ng-container *ngIf="(coursesWithoutFolder$ | async).length">
+          <ng-container *ngIf="(coursesWithoutFolder$ | async)[0].hidden">
+            <button
+              mat-icon-button aria-label="Show folder"
+              (click)="setVisibility(false, '')">
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="!(coursesWithoutFolder$ | async)[0].hidden">
+            <button
+              mat-icon-button aria-label="Hide folder"
+              (click)="setVisibility(true, '')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!(coursesWithoutFolder$ | async).length">
+          <button
+            mat-icon-button aria-label="Show folder"
+            disabled="true">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </ng-container>
+      </h2>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="(coursesWithoutFolder$ | async)"
+        class="example-list"
+        [attr.data-folder]="''"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of (coursesWithoutFolder$ | async)" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
+          {{ item.name }}
+          <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
+            <ng-container *ngIf="selectedCourses.length">
+              <div class="example-box" *ngFor="let subitem of selectedCourses">
+                {{ subitem.name }}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!selectedCourses.length">
+              <div class="example-box">
+                {{ item.name }}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="(newTempFolder$ | async).length">
+      <div class="example-container">
+        <h2 class="folder-name">
+          {{ (newTempFolder$ | async) }}
+          <button
+            mat-icon-button aria-label="Show folder"
+            disabled="true">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </h2>
+
+
+        <div
+          cdkDropList
+          [cdkDropListData]="newTempFolderCourses"
+          class="example-list"
+          [attr.data-folder]="newTempFolder$ | async"
+          (cdkDropListDropped)="drop($event)">
+          <div class="example-box" *ngFor="let item of newTempFolderCourses" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
+            {{ item.name }}
+            <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
+              <ng-container *ngIf="selectedCourses.length">
+                <div class="example-box" *ngFor="let subitem of selectedCourses">
+                  {{ subitem.name }}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!selectedCourses.length">
+                <div class="example-box">
+                  {{ item.name }}
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngFor="let folder of (folders$ | async)">
+      <div class="example-container">
+        <h2 class="folder-name">
+          {{ folder }}
+          <ng-container *ngIf="(coursesByFolder$ | async)[folder].length">
+            <ng-container *ngIf="(coursesByFolder$ | async)[folder][0].hidden">
+              <button
+                mat-icon-button aria-label="Show folder"
+                (click)="setVisibility(false, folder)">
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="!(coursesByFolder$ | async)[folder][0].hidden">
+              <button
+                mat-icon-button aria-label="Hide folder"
+                (click)="setVisibility(true, folder)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!(coursesByFolder$ | async)[folder].length">
+            <button
+              mat-icon-button aria-label="Show folder"
+              disabled="true">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
+        </h2>
+
+        <div
+          cdkDropList
+          [cdkDropListData]="(coursesByFolder$ | async)[folder]"
+          class="example-list"
+          [attr.data-folder]="folder"
+          (cdkDropListDropped)="drop($event)">
+          <div
+            class="example-box"
+            *ngFor="let item of (coursesByFolder$ | async)[folder]"
+            cdkDrag
+            [class.-selected]="isSelected(item)"
+            (click)="selectItem(item)"
+            [cdkDragData]="item">
+              {{ item.name }}
+              <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
+                <ng-container *ngIf="selectedCourses.length">
+                  <div class="example-box" *ngFor="let subitem of selectedCourses">
+                    {{ subitem.name }}
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!selectedCourses.length">
+                  <div class="example-box">
+                    {{ item.name }}
+                  </div>
+                </ng-container>
+              </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

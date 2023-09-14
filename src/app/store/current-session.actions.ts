@@ -12,6 +12,11 @@ export const setCourse = createAction(
   props<{ course: Course }>()
 );
 
+export const setNewTempFolder = createAction(
+  '[App] Set new temp folder',
+  props<{ newFolder: string }>()
+);
+
 export const addCourse = createAction(
   '[App] Add course',
   props<{ course: Course }>()

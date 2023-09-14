@@ -11,7 +11,7 @@
     <ng-container *ngIf="!(selected$ | async)?.length">
       <div class="title-section">
         <span [innerHTML]="'La méthode des J'"></span>
-        <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.9.8)'"></span>
+        <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v2.9.9)'"></span>
       </div>
     </ng-container>
     <span class="spacer"></span>
@@ -40,6 +40,12 @@
       <mat-icon>refresh</mat-icon>
     </button>
 
+    <button
+      *ngIf="!(selected$ | async)?.length"
+      mat-icon-button aria-label="Regroup courses button"
+      [routerLink]="['/folders']">
+      <mat-icon>folder</mat-icon>
+    </button>
 
     <button *ngIf="!(selected$ | async)?.length"
       [disabled]="(selectLoadingSetting$ | async)"
@@ -89,10 +95,13 @@
       <mat-list-option *ngFor="let course of (list$ | async);"
         [value]="course" [selected]="isSelectedByCourseId[course._id]">
         <span matListItemTitle>{{course.name}}</span>
+        <span matListItemLine>
+          {{ course.folder }}
+        </span>
         <span matListItemLine class="revision-day" *ngIf="isADayRevision(course) && !isAlreadyRevise(course)">
           cours à réviser aujourd'hui !
         </span>
-        <span class="revision-day -is-already-revise" *ngIf="isADayRevision(course) && isAlreadyRevise(course)">
+        <span matListItemLine class="revision-day -is-already-revise" *ngIf="isADayRevision(course) && isAlreadyRevise(course)">
           déjà fait bg
         </span>
       </mat-list-option>

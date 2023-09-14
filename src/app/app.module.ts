@@ -44,6 +44,9 @@ import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/mat
 import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './login/login.component';
 import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation-deletion-dialog/confirmation-deletion-dialog.component';
+import { FolderComponent } from 'src/app/folder/folder.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NewFolderDialogComponent } from 'src/app/folder/new-folder-dialog/new-folder-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,10 +56,12 @@ import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation
     DailyScheduleComponent,
     DaySchedulerDialogComponent,
     ConfirmationDeletionDialogComponent,
+    NewFolderDialogComponent,
     DescriptionClassComponent,
     HoursSelectorDialogComponent,
     InfiniteScrollComponent,
     ListClassesComponent,
+    FolderComponent,
     LoginComponent,
     OffsetTopDirective,
     RushDialogComponent,
@@ -80,6 +85,7 @@ import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation
     MatDatepickerModule,
     MatNativeDateModule,
     MatDialogModule,
+    DragDropModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

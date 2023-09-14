@@ -8,6 +8,7 @@ import { TodayClassesComponent } from './today-classes/today-classes.component';
 import { DescriptionClassComponent } from './description-class/description-class.component';
 import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './login/login.component';
+import { FolderComponent } from 'src/app/folder/folder.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,11 @@ const routes: Routes = [
   {
     path: 'home',
     component: ListClassesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'folders',
+    component: FolderComponent,
     canActivate: [AuthGuard],
   },
   {

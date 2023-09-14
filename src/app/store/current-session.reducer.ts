@@ -14,12 +14,14 @@ export interface CurrentSessionState {
   loadingRush: boolean;
   loadingSetting: boolean;
   settings: Weekend;
+  newTempFolder: string;
 }
 
 export const initialState: CurrentSessionState = {
   courses: [],
   selectedCourses: [],
   coursesFilter: '',
+  newTempFolder: '',
   todayCourses: [],
   notifications: [],
   rush: null,
@@ -36,8 +38,9 @@ const currentSessionReducer = createReducer(
   on(AppActions.addCourse, (state, { course }) => ({ ...state, courses: [...state.courses, course] })),
   on(AppActions.setRush, (state, { rush }) => ({ ...state, rush })),
   on(AppActions.setLoadingRush, (state, { loadingRush }) => ({ ...state, loadingRush })),
+  on(AppActions.setNewTempFolder, (state, { newFolder }) => ({ ...state, newTempFolder: newFolder })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
-  on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: [...state.courses.filter(c => c._id !== c._id), course] })),
+  on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: [...state.courses.filter(c => c._id !== course._id), course] })),
   on(AppActions.setCoursesFilter, (state, { coursesFilter }) => ({ ...state, coursesFilter })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),
@@ -56,6 +59,48 @@ export const selectCurrentSession = (state: AppState) => state.currentSession;
 export const selectCourses = createSelector(
   selectCurrentSession,
   (state: CurrentSessionState) => state.courses,
+);
+
+export const selectCoursesWithoutFolder = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.courses.reduce((prev, course) => {
+    if (!course.folder?.length) {
+      prev.push(course);
+    }
+    return prev;
+  }, []),
+);
+export const selectCoursesByFolder = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.courses.reduce((prev, course) => {
+    if (!!course.folder?.length) {
+      if (prev.hasOwnProperty(course.folder)) {
+        prev[course.folder].push(course);
+      } else {
+        prev[course.folder] = [course];
+      }
+    }
+    return prev;
+  }, {}),
+);
+export const selectFolders = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.courses.reduce((prev, course) => {
+    if (!!course.folder?.length) {
+      if (!prev.includes(course.folder)) {
+        prev.push(course.folder);
+      }
+    }
+    return prev;
+  }, []).sort(),
+);
+export const selectNewTempFolder = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.newTempFolder,
+);
+export const selectCoursesWithVisibleFolder = createSelector(
+  selectCurrentSession,
+  (state: CurrentSessionState) => state.courses.filter((course) => !course.hidden),
 );
 export const selectTodayCourses = createSelector(
   selectCurrentSession,
