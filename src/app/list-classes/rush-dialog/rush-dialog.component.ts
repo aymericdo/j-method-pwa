@@ -20,6 +20,7 @@ export class RushDialogComponent implements OnInit {
   isDayRevision = false;
   list$: Observable<Course[]>;
   submitting = false;
+  maxCoursesNumber = 8;
 
   constructor(
     private dialogRef: MatDialogRef<RushDialogComponent>,
@@ -35,7 +36,7 @@ export class RushDialogComponent implements OnInit {
     if (!this.endDate) { return; }
     this.submitting = true;
 
-    this.rushService.addRush(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), this.isDayRevision)
+    this.rushService.addRush(moment(this.startDate).format('YYYY-MM-DD'), moment(this.endDate).format('YYYY-MM-DD'), this.isDayRevision, this.maxCoursesNumber)
       .subscribe(() => {
         this.submitting = false;
         this.store.dispatch(setLoadingRush({ loadingRush: true }));
