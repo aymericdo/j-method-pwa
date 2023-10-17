@@ -22,6 +22,12 @@ export class SpeedDialFabComponent {
 
   constructor() { }
 
+  ngOnChange(): void {
+    if (this.fabTogglerState === 'active') {
+      this.buttons = this.fabButtons;
+    }
+  }
+
   showItems() {
     this.fabTogglerState = 'active';
     this.buttons = this.fabButtons;
