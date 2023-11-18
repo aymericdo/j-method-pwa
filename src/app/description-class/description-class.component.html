@@ -8,7 +8,7 @@
 <div>
   <div class="section-row">
     <span>Nom</span>
-    <h1 [innerHTML]="(selectedCourse$ | async)?.name"></h1>
+    <h1 [innerText]="(selectedCourse$ | async)?.name"></h1>
   </div>
   <div class="section-row">
     <div class="description-section">
@@ -31,7 +31,7 @@
       </button>
     </div>
     <div>
-      <h3 *ngIf="!editMode" [innerHTML]="(selectedCourse$ | async)?.description"></h3>
+      <h3 *ngIf="!editMode" [innerText]="(selectedCourse$ | async)?.description"></h3>
       <mat-form-field class="full-width" *ngIf="editMode">
         <textarea matInput [ngModel]="(selectedCourse$ | async)?.description" (ngModelChange)="description = $event" [disabled]="submitting"></textarea>
       </mat-form-field>

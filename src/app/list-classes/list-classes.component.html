@@ -6,12 +6,12 @@
         (click)='unselectAll()'>
         <mat-icon>keyboard_arrow_left</mat-icon>
       </button>
-      <span [innerHTML]="(selected$ | async)?.length"></span>
+      <span [innerText]="(selected$ | async)?.length"></span>
     </ng-container>
     <ng-container *ngIf="!(selected$ | async)?.length">
       <div class="title-section">
-        <span [innerHTML]="'La méthode des J'"></span>
-        <span class="version" *ngIf="!(selected$ | async)?.length" [innerHTML]="'(v3.0.0)'"></span>
+        <span [innerText]="'La méthode des J'"></span>
+        <span class="version" *ngIf="!(selected$ | async)?.length" [innerText]="'(v3.0.0)'"></span>
       </div>
     </ng-container>
     <span class="spacer"></span>

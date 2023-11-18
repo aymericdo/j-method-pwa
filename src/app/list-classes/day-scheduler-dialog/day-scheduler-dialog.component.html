@@ -4,8 +4,8 @@
   <mat-list>
     <mat-list-item *ngFor="let duration of durationList">
       <div matListItemTitle>
-        <span [innerHTML]="duration.course.name"></span>
-        <span class="separator" [innerHTML]="' - '"></span>
+        <span [innerText]="duration.course.name"></span>
+        <span class="separator" [innerText]="' - '"></span>
         <span class="duration">{{ duration.duration }} minutes</span>
       </div>
       <div matListItemMeta>
