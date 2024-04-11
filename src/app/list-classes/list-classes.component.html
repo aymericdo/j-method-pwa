@@ -11,7 +11,7 @@
     <ng-container *ngIf="!(selected$ | async)?.length">
       <div class="title-section">
         <span [innerText]="'La méthode des J'"></span>
-        <span class="version" *ngIf="!(selected$ | async)?.length" [innerText]="'(v3.0.0)'"></span>
+        <span class="version" *ngIf="!(selected$ | async)?.length" [innerText]="'(v3.0.1)'"></span>
       </div>
     </ng-container>
     <span class="spacer"></span>
@@ -96,7 +96,8 @@
         [value]="course" [selected]="isSelectedByCourseId[course._id]">
         <span matListItemTitle>{{course.name}}</span>
         <span matListItemLine>
-          {{ course.folder }}
+          <span *ngIf="course.folder">{{ course.folder }} - </span>
+          <span>{{ course.advancement + 1 || 1 }}/{{ course.difficulties === 'easy' ? 4 : 5 }}</span>
         </span>
         <span matListItemLine class="revision-day" *ngIf="isADayRevision(course) && !isAlreadyRevise(course)">
           cours à réviser aujourd'hui !
@@ -140,3 +141,7 @@
   [fabButtons]="fabButtons"
   aria-label="Opt courses button"
 ></app-speed-dial-fab>
+<button *ngIf="(selected$ | async)?.length === 1"
+  mat-fab color="primary" class="advancement-btn" (click)="onOpenModal()">
+  <i class="material-icons">checklist</i>
+</button>

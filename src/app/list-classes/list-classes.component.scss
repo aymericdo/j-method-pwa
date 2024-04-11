@@ -9,6 +9,13 @@
     flex-direction: column;
   }
 
+  .advancement-btn {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 2;
+  }
+
   .all-checkbox-section {
     padding: 0 8px 0 1rem;
 

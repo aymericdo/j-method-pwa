@@ -40,7 +40,7 @@ const currentSessionReducer = createReducer(
   on(AppActions.setLoadingRush, (state, { loadingRush }) => ({ ...state, loadingRush })),
   on(AppActions.setNewTempFolder, (state, { newFolder }) => ({ ...state, newTempFolder: newFolder })),
   on(AppActions.setCourses, (state, { courses }) => ({ ...state, courses })),
-  on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: [...state.courses.filter(c => c._id !== course._id), course] })),
+  on(AppActions.setCourse, (state, { course }) => ({ ...state, courses: state.courses.map(c => c._id === course._id ? course : c) })),
   on(AppActions.setCoursesFilter, (state, { coursesFilter }) => ({ ...state, coursesFilter })),
   on(AppActions.setSelectedCourses, (state, { selectedCourses })  => ({ ...state, selectedCourses })),
   on(AppActions.setNotifications, (state, { notifications })  => ({ ...state, notifications })),

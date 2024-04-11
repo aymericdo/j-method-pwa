@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Avancement</h2>
+<div class="content-section">
+  <div mat-dialog-content class="content">
+    <mat-form-field appearance="fill">
+      <mat-label>Avancement</mat-label>
+      <mat-select matNativeControl required [(value)]="selected">
+        <mat-option *ngFor="let revision of revisionsChoices" [value]="revision.value">{{ revision.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="submitting" class="progress-spinner">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+
+  <div *ngIf="!submitting" mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Annuler</button>
+    <button mat-button (click)="handleClick()">Go!</button>
+  </div>
+</div>

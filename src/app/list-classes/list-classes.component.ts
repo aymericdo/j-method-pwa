@@ -18,6 +18,7 @@ import * as moment from 'moment';
 import { RushService } from '../rush.service';
 import { ConfirmationDeletionDialogComponent } from './confirmation-deletion-dialog/confirmation-deletion-dialog.component';
 import { SettingService } from '../setting.service';
+import { AdvancementDialogComponent } from 'src/app/list-classes/advancement-dialog/advancement-dialog.component';
 
 export type Difficulties = 'easy' | 'tough';
 
@@ -33,6 +34,7 @@ export interface Course {
   reminders: string[];
   folder?: string;
   hidden?: string;
+  advancement?: number;
 }
 
 export interface Notification {
@@ -194,7 +196,7 @@ export class ListClassesComponent implements OnInit {
     this.destroyed$.complete();
   }
 
-  openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse' | 'resetWE' | 'weekend'): void {
+  openDialog(dialog: 'scheduler' | 'signout' | 'rush' | 'deleteRush' | 'deleteCourse' | 'resetWE' | 'weekend' | 'advancement'): void {
     if (dialog === 'scheduler') {
       const daySchedulerDialogRef = this.dialog.open(DaySchedulerDialogComponent, {
         height: '400px',
@@ -238,6 +240,8 @@ export class ListClassesComponent implements OnInit {
           this.removeCourses()
         }
       });
+    } else if (dialog === 'advancement') {
+      this.dialog.open(AdvancementDialogComponent);
     } else if (dialog === 'signout') {
       this.dialog.open(ConfirmationSignoutDialogComponent);
     }
@@ -325,6 +329,10 @@ export class ListClassesComponent implements OnInit {
         break;
       }
     }
+  }
+
+  onOpenModal(): void {
+    this.openDialog('advancement');
   }
 
   private fetchEverything(): void {

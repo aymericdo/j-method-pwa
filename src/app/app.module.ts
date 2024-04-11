@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -47,6 +48,7 @@ import { ConfirmationDeletionDialogComponent } from './list-classes/confirmation
 import { FolderComponent } from 'src/app/folder/folder.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NewFolderDialogComponent } from 'src/app/folder/new-folder-dialog/new-folder-dialog.component';
+import { AdvancementDialogComponent } from 'src/app/list-classes/advancement-dialog/advancement-dialog.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import { NewFolderDialogComponent } from 'src/app/folder/new-folder-dialog/new-f
     SettingsComponent,
     SpeedDialFabComponent,
     TodayClassesComponent,
+    AdvancementDialogComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -87,6 +90,7 @@ import { NewFolderDialogComponent } from 'src/app/folder/new-folder-dialog/new-f
     MatDialogModule,
     DragDropModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
