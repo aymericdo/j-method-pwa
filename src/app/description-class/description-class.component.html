@@ -1,7 +1,7 @@
 <button
   mat-icon-button color="primary" class="fab-btn-back-button"
   aria-label="Home button"
-  routerLink="/home"
+  [routerLink]="fromFiveByFive ? '/five-by-five' : '/home'"
 >
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>

@@ -88,7 +88,7 @@ export class ListClassesComponent implements OnInit {
     disabled: false,
   }, {
     id: 3,
-    name: 'weekend',
+    name: 'fiveByFive',
     icon: 'next_week',
     disabled: false,
   }];
@@ -325,14 +325,10 @@ export class ListClassesComponent implements OnInit {
       }
 
       case 3: {
-        this.openDialog('weekend');
+        this.router.navigate(['five-by-five']);
         break;
       }
     }
-  }
-
-  onOpenModal(): void {
-    this.openDialog('advancement');
   }
 
   private fetchEverything(): void {
@@ -370,5 +366,9 @@ export class ListClassesComponent implements OnInit {
       .subscribe((todayCourses) => {
         this.store.dispatch(setTodayCourses({ todayCourses }));
       });
+  }
+
+  courseById(index, course) {
+    return course._id;
   }
 }

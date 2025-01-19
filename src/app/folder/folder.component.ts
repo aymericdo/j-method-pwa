@@ -42,7 +42,7 @@ export class FolderComponent implements OnInit {
   }
 
   selectItem(course: Course): void {
-    if (this.selectedCourses.length && this.selectedCourses[0].folder !== course.folder) return;
+    if (this.selectedCourses.length && ((this.selectedCourses[0].folder || '') !== (course.folder || ''))) return;
 
     if (this.selectedCourses.some((c) => c._id === course._id)) {
       this.selectedCourses = this.selectedCourses.filter((c) => c._id !== course._id)
@@ -111,6 +111,18 @@ export class FolderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.store.dispatch(setNewTempFolder({ newFolder: result }));
     });
+  }
+
+  courseById(index, course) {
+    return course._id;
+  }
+
+  folderByName(index, folder) {
+    return folder.name;
+  }
+
+  trackFolder(index, folder) {
+    return folder;
   }
 
   private fetchEverything(): void {

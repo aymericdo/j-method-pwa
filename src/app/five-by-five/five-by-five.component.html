@@ -1,0 +1,35 @@
+<button
+  mat-icon-button color="primary" class="fab-btn-back-button"
+  aria-label="Home button"
+  routerLink="/home"
+>
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+
+<div *ngIf="fetching" class="progress-spinner">
+  <mat-progress-spinner
+    color="primary"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+
+<ng-container *ngIf="!fetching">
+  <ng-container *ngIf="courses?.length; else empty">
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let course of courses; trackBy:courseById" [routerLink]="['/detail-class', course._id]" [queryParams]="{ fromFiveByFive: true}">
+        <span matListItemTitle>{{course.name}}</span>
+        <span matListItemLine>Nombre de révision{{ course.advancementFiveByFive > 1 ? 's' : '' }} déjà effectuée{{ course.advancementFiveByFive > 1 ? 's' : '' }} : {{ course.advancementFiveByFive }}</span>
+      </a>
+    </mat-nav-list>
+  </ng-container>
+  <ng-template #empty>
+    <div class="empty-section">
+      <img class="illustration" src="assets/no-data.svg" />
+      <h3>Pas encore de cours</h3>
+    </div>
+  </ng-template>
+</ng-container>
+
+<button mat-fab color="primary" class="fab-btn" (click)="handleNextCourses()">
+  <i class="material-icons">add</i>
+</button>

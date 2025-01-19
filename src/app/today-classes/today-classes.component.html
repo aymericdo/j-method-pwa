@@ -7,7 +7,7 @@
 </button>
 <ng-container *ngIf="(list$ | async)?.length; else empty">
   <mat-nav-list #courses (selectionChange)="onSelection($event, courses)">
-    <a mat-list-item *ngFor="let course of (list$ | async)"
+    <a mat-list-item *ngFor="let course of (list$ | async); trackBy:courseById"
       [routerLink]="['/detail-class', course._id]">
       <div matListItemTitle>{{course.name}}</div>
       <span matListItemLine class="is-from-we" *ngIf="course.isFromWE">Cours du week end</span>

@@ -55,6 +55,10 @@ export class TodayClassesComponent implements OnInit {
     }
   }
 
+  courseById(index, course) {
+    return course._id;
+  }
+
   private fetchData() {
     this.courseService.getTodayClasses()
       .subscribe((todayCourses) => {

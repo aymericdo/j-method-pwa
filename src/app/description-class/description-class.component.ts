@@ -20,6 +20,7 @@ export class DescriptionClassComponent implements OnInit {
   editMode: boolean;
   submitting: boolean = false;
   description = '';
+  fromFiveByFive = false
 
   constructor(
     private courseService: CourseService,
@@ -29,6 +30,8 @@ export class DescriptionClassComponent implements OnInit {
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('id');
+
+    this.fromFiveByFive = !!this.route.snapshot.queryParams['fromFiveByFive'];
 
     this.courseService.getCourses().subscribe((courses: Course[]) => {
       this.store.dispatch(setCourses({ courses }));

@@ -57,11 +57,11 @@
         class="example-list"
         [attr.data-folder]="''"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of (coursesWithoutFolder$ | async)" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
+        <div class="example-box" *ngFor="let item of (coursesWithoutFolder$ | async); trackBy:folderByName" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
           {{ item.name }}
           <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
             <ng-container *ngIf="selectedCourses.length">
-              <div class="example-box" *ngFor="let subitem of selectedCourses">
+              <div class="example-box" *ngFor="let subitem of selectedCourses; trackBy:courseById">
                 {{ subitem.name }}
               </div>
             </ng-container>
@@ -93,11 +93,11 @@
           class="example-list"
           [attr.data-folder]="newTempFolder$ | async"
           (cdkDropListDropped)="drop($event)">
-          <div class="example-box" *ngFor="let item of newTempFolderCourses" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
+          <div class="example-box" *ngFor="let item of newTempFolderCourses; trackBy:folderByName" [class.-selected]="isSelected(item)" (click)="selectItem(item)" cdkDrag [cdkDragData]="item">
             {{ item.name }}
             <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
               <ng-container *ngIf="selectedCourses.length">
-                <div class="example-box" *ngFor="let subitem of selectedCourses">
+                <div class="example-box" *ngFor="let subitem of selectedCourses; trackBy:courseById">
                   {{ subitem.name }}
                 </div>
               </ng-container>
@@ -112,7 +112,7 @@
       </div>
     </ng-container>
 
-    <ng-container *ngFor="let folder of (folders$ | async)">
+    <ng-container *ngFor="let folder of (folders$ | async); trackBy:trackFolder">
       <div class="example-container">
         <h2 class="folder-name">
           {{ folder }}
@@ -149,7 +149,7 @@
           (cdkDropListDropped)="drop($event)">
           <div
             class="example-box"
-            *ngFor="let item of (coursesByFolder$ | async)[folder]"
+            *ngFor="let item of (coursesByFolder$ | async)[folder]; trackBy:folderByName"
             cdkDrag
             [class.-selected]="isSelected(item)"
             (click)="selectItem(item)"
@@ -157,7 +157,7 @@
               {{ item.name }}
               <div *cdkDragPreview [matBadge]="selectedCourses.length === 0 ? 1 : selectedCourses.length" matBadgeSize="large">
                 <ng-container *ngIf="selectedCourses.length">
-                  <div class="example-box" *ngFor="let subitem of selectedCourses">
+                  <div class="example-box" *ngFor="let subitem of selectedCourses; trackBy:courseById">
                     {{ subitem.name }}
                   </div>
                 </ng-container>

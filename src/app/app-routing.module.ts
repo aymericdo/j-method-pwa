@@ -9,6 +9,7 @@ import { DescriptionClassComponent } from './description-class/description-class
 import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './login/login.component';
 import { FolderComponent } from 'src/app/folder/folder.component';
+import { FiveByFiveComponent } from 'src/app/five-by-five/five-by-five.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,11 @@ const routes: Routes = [
   {
     path: 'today-classes',
     component: TodayClassesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'five-by-five',
+    component: FiveByFiveComponent,
     canActivate: [AuthGuard],
   },
   {

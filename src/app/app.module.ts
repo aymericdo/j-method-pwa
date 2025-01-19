@@ -49,6 +49,8 @@ import { FolderComponent } from 'src/app/folder/folder.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NewFolderDialogComponent } from 'src/app/folder/new-folder-dialog/new-folder-dialog.component';
 import { AdvancementDialogComponent } from 'src/app/list-classes/advancement-dialog/advancement-dialog.component';
+import { FiveByFiveDialogComponent } from 'src/app/list-classes/five-by-five-dialog/five-by-five-dialog.component';
+import { FiveByFiveComponent } from 'src/app/five-by-five/five-by-five.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { AdvancementDialogComponent } from 'src/app/list-classes/advancement-dia
     AppComponent,
     ConfirmationSignoutDialogComponent,
     DailyScheduleComponent,
+    FiveByFiveComponent,
     DaySchedulerDialogComponent,
     ConfirmationDeletionDialogComponent,
     NewFolderDialogComponent,
@@ -68,6 +71,7 @@ import { AdvancementDialogComponent } from 'src/app/list-classes/advancement-dia
     OffsetTopDirective,
     RushDialogComponent,
     WeekendDialogComponent,
+    FiveByFiveDialogComponent,
     ScrollableDirective,
     SettingsComponent,
     SpeedDialFabComponent,

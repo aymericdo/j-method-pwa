@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Course, Rush } from './list-classes/list-classes.component';
+import { Course } from './list-classes/list-classes.component';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -40,5 +40,13 @@ export class CourseService {
 
   postTodayClasses(course: { course: Course }): Observable<boolean> {
     return this.httpClient.post<boolean>(`${this.server}/api/today-classes`, course);
+  }
+
+  getFiveByFive(): Observable<Course[]> {
+    return this.httpClient.get<Course[]>(`${this.server}/api/five-by-five`);
+  }
+
+  postFiveByFive(coursesNumber: number): Observable<Course[]> {
+    return this.httpClient.post<Course[]>(`${this.server}/api/five-by-five`, { coursesNumber });
   }
 }

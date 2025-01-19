@@ -92,7 +92,7 @@
       </mat-checkbox>
     </div>
     <mat-selection-list #courses (selectionChange)="onSelection($event, courses)">
-      <mat-list-option *ngFor="let course of (list$ | async);"
+      <mat-list-option *ngFor="let course of (list$ | async); trackBy:courseById"
         [value]="course" [selected]="isSelectedByCourseId[course._id]">
         <span matListItemTitle>{{course.name}}</span>
         <span matListItemLine>
@@ -142,6 +142,6 @@
   aria-label="Opt courses button"
 ></app-speed-dial-fab>
 <button *ngIf="(selected$ | async)?.length === 1"
-  mat-fab color="primary" class="advancement-btn" (click)="onOpenModal()">
+  mat-fab color="primary" class="advancement-btn" (click)="openDialog('advancement')">
   <i class="material-icons">checklist</i>
 </button>

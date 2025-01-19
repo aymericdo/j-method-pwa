@@ -1,0 +1,29 @@
+:host {
+  .progress-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .empty-section {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .illustration {
+    display: block;
+    height: 200px;
+  }
+
+  .fab-btn {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+  }
+}

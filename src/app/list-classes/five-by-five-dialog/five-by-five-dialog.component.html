@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Révision du jour</h2>
+<div class="content-section">
+  <div *ngIf="!submitting" mat-dialog-content class="content">
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre de cours pour cette journée de révision</mat-label>
+      <input matInput type="number" placeholder="Ex. 5" name="settings" [(ngModel)]="coursesNumber" [disabled]="submitting" min="3" max="10">
+    </mat-form-field>
+  </div>
+  <div *ngIf="submitting" class="progress-spinner">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+
+  <div *ngIf="!submitting" mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Annuler</button>
+    <button mat-button (click)="handleClick()">Go!</button>
+  </div>
+</div>
