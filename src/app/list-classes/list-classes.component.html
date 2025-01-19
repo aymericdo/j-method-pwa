@@ -97,7 +97,7 @@
         <span matListItemTitle>{{course.name}}</span>
         <span matListItemLine>
           <span *ngIf="course.folder">{{ course.folder }} - </span>
-          <span>{{ course.advancement + 1 || 1 }}/{{ course.difficulties === 'easy' ? 4 : 5 }}</span>
+          <span>{{ course.advancement || 1 }}/{{ course.difficulties === 'easy' ? 4 : 5 }}</span>
         </span>
         <span matListItemLine class="revision-day" *ngIf="isADayRevision(course) && !isAlreadyRevise(course)">
           cours à réviser aujourd'hui !
