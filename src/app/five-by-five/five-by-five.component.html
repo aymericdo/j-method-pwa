@@ -18,7 +18,7 @@
     <mat-nav-list>
       <a mat-list-item *ngFor="let course of courses; trackBy:courseById" [routerLink]="['/detail-class', course._id]" [queryParams]="{ fromFiveByFive: true}">
         <span matListItemTitle>{{course.name}}</span>
-        <span matListItemLine>Nombre de révision{{ course.advancementFiveByFive > 1 ? 's' : '' }} déjà effectuée{{ course.advancementFiveByFive > 1 ? 's' : '' }} : {{ course.advancementFiveByFive }}</span>
+        <span matListItemLine>Nombre de révision{{ course.advancement > 1 ? 's' : '' }} déjà effectuée{{ course.advancement > 1 ? 's' : '' }} : {{ course.advancement }}</span>
       </a>
     </mat-nav-list>
   </ng-container>
